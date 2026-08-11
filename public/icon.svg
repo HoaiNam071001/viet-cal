@@ -5,10 +5,6 @@
       <stop offset="0.52" stop-color="#19BE70" />
       <stop offset="1" stop-color="#087A46" />
     </linearGradient>
-    <linearGradient id="app-ring" x1="158" y1="128" x2="367" y2="390" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#D9FFEA" />
-      <stop offset="1" stop-color="#8BE8B5" />
-    </linearGradient>
     <filter id="soft-shadow" x="96" y="92" width="320" height="328" filterUnits="userSpaceOnUse">
       <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#06492D" flood-opacity="0.28" />
     </filter>
@@ -20,7 +16,7 @@
 
   <!-- Framed logo kept inside the PWA maskable safe zone. -->
   <g filter="url(#soft-shadow)">
-    <circle cx="256" cy="250" r="130" fill="#F8FFFB" stroke="url(#app-ring)" stroke-width="10" />
+    <circle cx="256" cy="250" r="130" fill="#F8FFFB" stroke="#5AAEFF" stroke-width="10" />
   </g>
 
   <g transform="translate(128 122) scale(1.6)">
