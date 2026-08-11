@@ -1,0 +1,207 @@
+@import 'tailwindcss';
+
+/* Theme is toggled by a `.dark` class on <html>, set before paint in index.html. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+ * Semantic tokens. Light values live on :root, dark values on .dark, and
+ * `@theme inline` exposes them to Tailwind utilities (bg-surface, text-muted…)
+ * as live var() references so switching themes needs no re-render.
+ * ------------------------------------------------------------------------- */
+:root {
+  --bg: oklch(98.4% 0.004 60);
+  --bg-elevated: oklch(100% 0 0);
+  --surface: oklch(100% 0 0);
+  --surface-2: oklch(96.8% 0.005 60);
+  --surface-3: oklch(94.2% 0.007 60);
+  --border: oklch(91% 0.006 60);
+  --border-strong: oklch(85% 0.008 60);
+  --text: oklch(21% 0.012 300);
+  --text-muted: oklch(52% 0.015 300);
+  --text-subtle: oklch(66% 0.012 300);
+
+  --primary: oklch(56% 0.198 22);
+  --primary-hover: oklch(51% 0.198 22);
+  --primary-fg: oklch(100% 0 0);
+  --primary-soft: oklch(95.5% 0.03 22);
+  --primary-ring: oklch(56% 0.198 22 / 0.35);
+
+  --accent: oklch(64% 0.128 68);
+  --accent-soft: oklch(95.5% 0.035 75);
+
+  --weekend: oklch(56% 0.14 22);
+  --today-ring: var(--primary);
+
+  --shadow-soft: 0 1px 2px oklch(20% 0.02 300 / 0.04), 0 8px 24px oklch(20% 0.02 300 / 0.06);
+  --shadow-panel: 0 2px 6px oklch(20% 0.02 300 / 0.06), 0 24px 60px oklch(20% 0.02 300 / 0.12);
+
+  color-scheme: light;
+}
+
+.dark {
+  --bg: oklch(16.5% 0.012 295);
+  --bg-elevated: oklch(19.5% 0.013 295);
+  --surface: oklch(21% 0.014 295);
+  --surface-2: oklch(24.5% 0.015 295);
+  --surface-3: oklch(28% 0.016 295);
+  --border: oklch(30% 0.014 295);
+  --border-strong: oklch(38% 0.016 295);
+  --text: oklch(96% 0.006 300);
+  --text-muted: oklch(72% 0.014 300);
+  --text-subtle: oklch(58% 0.014 300);
+
+  --primary: oklch(68% 0.176 22);
+  --primary-hover: oklch(73% 0.176 22);
+  --primary-fg: oklch(17% 0.02 22);
+  --primary-soft: oklch(30% 0.07 22);
+  --primary-ring: oklch(68% 0.176 22 / 0.4);
+
+  --accent: oklch(79% 0.115 72);
+  --accent-soft: oklch(30% 0.05 72);
+
+  --weekend: oklch(74% 0.13 22);
+
+  --shadow-soft: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.28);
+  --shadow-panel: 0 2px 6px oklch(0% 0 0 / 0.35), 0 24px 60px oklch(0% 0 0 / 0.5);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-weekend: var(--weekend);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-panel: var(--shadow-panel);
+
+  --font-sans:
+    'Inter var', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, 'Helvetica Neue',
+    sans-serif;
+
+  --radius-4xl: 1.75rem;
+  --radius-5xl: 2.25rem;
+
+  --animate-fade-in: fade-in 0.18s ease-out;
+  --animate-scale-in: scale-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-up: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-left: slide-left 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* The month grid pans horizontally on touch; never let the page itself. */
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  /* A very light glass wash used by the app header and bottom navigation. */
+  .glass {
+    background: color-mix(in oklab, var(--bg) 78%, transparent);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
