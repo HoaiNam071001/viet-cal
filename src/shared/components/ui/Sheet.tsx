@@ -96,7 +96,13 @@ export function Sheet({ open, onClose, title, children, desktopVariant = 'panel'
           </div>
         ) : null}
 
-        <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-3 pb-3">
+        <div
+          className={cn(
+            'flex shrink-0 items-center justify-between gap-3 px-5',
+            // Without a title the row is just the close button — keep it tight.
+            title ? 'pt-3 pb-3' : 'pt-1 pb-0',
+          )}
+        >
           {title ? <h2 className="text-text text-lg font-semibold">{title}</h2> : <span />}
           <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Đóng">
             <X className="size-4.5" />

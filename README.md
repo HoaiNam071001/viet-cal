@@ -5,10 +5,11 @@
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # tsc -b && vite build
-npm test         # vitest (lunar engine + app smoke tests)
-npm run lint     # oxlint
+npm run dev          # http://localhost:5173
+npm run build        # tsc -b && vite build
+npm test             # vitest (lunar engine + app smoke tests)
+npm run lint         # oxlint
+npm run screenshots  # chụp lại ảnh trong public/screenshots (cần `npm run dev` đang chạy)
 ```
 
 ## Tech stack
@@ -39,10 +40,11 @@ src/
 │   ├── search/             # parse-query (text → ngày) + useSearch + SearchDialog
 │   ├── countdown/          # getDaysUntil / formatCountdown + CountdownCard
 │   ├── share/              # render ảnh ngày bằng canvas + Web Share API
+│   ├── pwa/                # useInstallPrompt + banner cài ứng dụng (Android/iOS)
 │   └── settings/           # panel cài đặt
 ├── shared/                 # UI kit (Button, Card, Sheet, Segmented…), hooks, utils, types
 ├── widgets/                # TodayCard, LunarInfoCard, UpcomingHolidaysCard, MiniCalendarCard
-├── pages/                  # Calendar / Converter / Holidays / Settings
+├── pages/                  # Home / Calendar / Converter / Holidays / Settings
 └── index.css               # design tokens (light + dark) + base layer
 ```
 
@@ -84,8 +86,30 @@ UI không bao giờ gọi API trực tiếp.
 `features/calendar/types/event.ts` + `hooks/useEvents.ts` là điểm cắm sẵn: Day View và Day Detail
 đã render theo dữ liệu trả về từ `useEventsForDate`, nên chỉ cần thay phần nguồn dữ liệu.
 
+## Thiết kế
+
+- **Màu chủ đạo**: xanh lá tươi (`--primary`, oklch 64%/76% cho sáng/tối); vàng đồng dành riêng cho
+  thông tin Âm lịch; đỏ san hô cho cuối tuần & ngày lễ được nghỉ.
+- **Widget kính**: `Card variant="glass" | "tinted"` → class `.glass-card` trong `src/index.css`
+  (nền trong suốt + `backdrop-filter`, lớp sheen bóng ở trên, viền hairline). Nền trang có hai vệt
+  gradient mềm để lớp kính có thứ để khúc xạ.
+- Toàn bộ token màu khai báo ở `:root` / `.dark` rồi map vào Tailwind qua `@theme inline`, nên đổi
+  theme không cần render lại React.
+- Logo/icon: `public/logo.svg` (header, banner cài đặt), `public/icon.svg` (PWA), `public/favicon.svg`.
+
+## Ảnh chụp màn hình
+
+`npm run screenshots` dùng puppeteer-core điều khiển Chrome đã cài trên máy để chụp lại
+`public/screenshots/*.png` (dùng cho trang chủ và mục `screenshots` của manifest). Script cũng
+báo lỗi nếu có trang bị tràn ngang. Thay ảnh thủ công cũng được — trang chủ tự hiện placeholder
+nếu thiếu file.
+
 ## PWA
 
 `public/manifest.webmanifest` + `public/sw.js` (cache-first cho app shell, network-first cho API
 ngày lễ). Service worker chỉ đăng ký ở bản production (`src/pwa.ts`). Offline vẫn xem được lịch,
 âm lịch và toàn bộ ngày lễ tính tại máy.
+
+Banner "Cài ứng dụng" chỉ hiện trên mobile: Android/Chrome dùng sự kiện `beforeinstallprompt`,
+iOS/Safari không có sự kiện này nên hiện hướng dẫn *Chia sẻ → Thêm vào MH chính*. Người dùng tắt
+banner thì 7 ngày sau mới hỏi lại; đã cài rồi thì không hỏi nữa.

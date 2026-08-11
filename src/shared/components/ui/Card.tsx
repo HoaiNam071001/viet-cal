@@ -1,10 +1,24 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/shared/utils/cn'
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * `glass` gives the translucent, glossy pane used by widgets; `tinted` adds a
+   * brand-coloured wash on top of it. `solid` is the plain surface.
+   */
+  variant?: 'solid' | 'glass' | 'tinted'
+}
+
+export function Card({ className, variant = 'solid', ...props }: CardProps) {
   return (
     <div
-      className={cn('bg-surface border-border rounded-3xl border shadow-soft', className)}
+      className={cn(
+        'rounded-3xl',
+        variant === 'solid' && 'bg-surface border-border border shadow-soft',
+        variant !== 'solid' && 'glass-card',
+        variant === 'tinted' && 'glass-card-tinted',
+        className,
+      )}
       {...props}
     />
   )

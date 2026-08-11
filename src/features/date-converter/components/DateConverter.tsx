@@ -39,7 +39,7 @@ export function DateConverter({ onViewDate, className }: DateConverterProps) {
     <div className={cn('flex flex-col gap-4', className)}>
       <Segmented options={DIRECTIONS} value={direction} onChange={setDirection} className="flex w-full" />
 
-      <Card className="p-5">
+      <Card variant="glass" className="p-5">
         <p className="text-subtle mb-3 text-[11px] font-semibold tracking-[0.14em] uppercase">
           {sourceLabel}
         </p>
@@ -99,7 +99,7 @@ export function DateConverter({ onViewDate, className }: DateConverterProps) {
         <ArrowRight className="hidden size-5 sm:block" />
       </div>
 
-      <Card className="from-primary-soft to-surface bg-gradient-to-br p-5">
+      <Card variant="tinted" className="p-5">
         <p className="text-subtle mb-2 text-[11px] font-semibold tracking-[0.14em] uppercase">
           {targetLabel}
         </p>

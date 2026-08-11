@@ -16,7 +16,7 @@ export function UpcomingHolidaysCard({ count = 5, onSelect, className }: Upcomin
   const upcoming = useUpcomingHolidays(count)
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card variant="glass" className={cn('overflow-hidden', className)}>
       <CardHeader title="Ngày lễ sắp tới" icon={<CalendarDays className="size-3.5" />} />
       <ul className="flex flex-col px-2 pb-2">
         {upcoming.map((item) => (

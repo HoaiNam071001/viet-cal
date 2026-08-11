@@ -5,6 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { AppProviders } from '@/app/providers/AppProviders'
 import { AppShell } from '@/app/layout/AppShell'
 import { CalendarPage } from '@/pages/CalendarPage'
+import { HomePage } from '@/pages/HomePage'
 import { ConverterPage } from '@/pages/ConverterPage'
 import { HolidaysPage } from '@/pages/HolidaysPage'
 import { SettingsPage } from '@/pages/SettingsPage'
@@ -31,6 +32,7 @@ function renderApp(initialPath: string) {
       <MemoryRouter initialEntries={[initialPath]}>
         <Routes>
           <Route path="/" element={<AppShell />}>
+            <Route index element={<HomePage />} />
             <Route path="calendar/:view" element={<CalendarPage />} />
             <Route path="convert" element={<ConverterPage />} />
             <Route path="holidays" element={<HolidaysPage />} />
@@ -43,6 +45,15 @@ function renderApp(initialPath: string) {
 }
 
 describe('app smoke test', () => {
+  it('renders the home page with today and the feature list', () => {
+    renderApp('/')
+
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('Lịch Việt')
+    expect(screen.getByText('Hôm nay')).toBeTruthy()
+    expect(screen.getByText('Âm lịch chuẩn Việt Nam')).toBeTruthy()
+    expect(screen.getByText('Mở lịch tháng')).toBeTruthy()
+  })
+
   it('renders the month view with lunar days even when the holiday API is down', () => {
     renderApp('/calendar/month?date=2026-08-11')
 

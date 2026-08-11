@@ -20,8 +20,8 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
     `${weight} ${size}px -apple-system, "Segoe UI", system-ui, Roboto, sans-serif`
 
   const background = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT)
-  background.addColorStop(0, '#fff7f5')
-  background.addColorStop(1, '#ffeae4')
+  background.addColorStop(0, '#f2fdf6')
+  background.addColorStop(1, '#dcf6e6')
   ctx.fillStyle = background
   ctx.fillRect(0, 0, WIDTH, HEIGHT)
 
@@ -29,7 +29,7 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
   const pad = 72
   roundedRect(ctx, pad, pad, WIDTH - pad * 2, HEIGHT - pad * 2, 56)
   ctx.fillStyle = '#ffffff'
-  ctx.shadowColor = 'rgba(120, 40, 30, 0.14)'
+  ctx.shadowColor = 'rgba(20, 90, 55, 0.14)'
   ctx.shadowBlur = 60
   ctx.shadowOffsetY = 20
   ctx.fill()
@@ -41,31 +41,31 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
   const centerX = WIDTH / 2
   ctx.textAlign = 'center'
 
-  ctx.fillStyle = '#c8322f'
+  ctx.fillStyle = '#0f9d58'
   ctx.font = font(44, '600')
   ctx.fillText(getWeekdayLabel(date).toUpperCase(), centerX, 300)
 
-  ctx.fillStyle = '#1b1620'
+  ctx.fillStyle = '#14261c'
   ctx.font = font(300, '700')
   ctx.fillText(String(date.day), centerX, 600)
 
-  ctx.fillStyle = '#4b4550'
+  ctx.fillStyle = '#48544c'
   ctx.font = font(52, '500')
   ctx.fillText(formatDateVN(date), centerX, 690)
 
   // Divider
-  ctx.strokeStyle = '#eee2dd'
+  ctx.strokeStyle = '#dfeee6'
   ctx.lineWidth = 3
   ctx.beginPath()
   ctx.moveTo(centerX - 220, 760)
   ctx.lineTo(centerX + 220, 760)
   ctx.stroke()
 
-  ctx.fillStyle = '#b0741f'
+  ctx.fillStyle = '#a9761d'
   ctx.font = font(46, '600')
   ctx.fillText(formatLunarTraditional(info.lunar), centerX, 840)
 
-  ctx.fillStyle = '#6b6375'
+  ctx.fillStyle = '#63736a'
   ctx.font = font(38)
   ctx.fillText(`Năm ${info.sexagenary.year.name}`, centerX, 900)
   ctx.fillText(`Ngày ${info.sexagenary.day.name} · ${info.solarTerm.name}`, centerX, 960)
@@ -73,14 +73,14 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
   if (holidayName) {
     const chipWidth = Math.min(WIDTH - pad * 2 - 120, ctx.measureText(holidayName).width + 200)
     roundedRect(ctx, centerX - chipWidth / 2, 1030, chipWidth, 96, 48)
-    ctx.fillStyle = '#fdeeeb'
+    ctx.fillStyle = '#e4f7ec'
     ctx.fill()
-    ctx.fillStyle = '#c8322f'
+    ctx.fillStyle = '#0b7a44'
     ctx.font = font(40, '600')
     ctx.fillText(holidayName, centerX, 1092)
   }
 
-  ctx.fillStyle = '#a89fb0'
+  ctx.fillStyle = '#9aa8a0'
   ctx.font = font(30)
   ctx.fillText('Lịch Việt · Dương lịch & Âm lịch', centerX, HEIGHT - 130)
 

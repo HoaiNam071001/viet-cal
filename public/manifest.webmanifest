@@ -7,9 +7,13 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "categories": ["productivity", "lifestyle", "utilities"],
+  "background_color": "#f4fbf6",
+  "theme_color": "#0f9d58",
+  "categories": [
+    "productivity",
+    "lifestyle",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "/icon.svg",
@@ -25,8 +29,40 @@
     }
   ],
   "shortcuts": [
-    { "name": "Hôm nay", "url": "/calendar/day" },
-    { "name": "Đổi ngày Âm - Dương", "url": "/convert" },
-    { "name": "Ngày lễ", "url": "/holidays" }
+    {
+      "name": "Hôm nay",
+      "url": "/calendar/day"
+    },
+    {
+      "name": "Đổi ngày Âm - Dương",
+      "url": "/convert"
+    },
+    {
+      "name": "Ngày lễ",
+      "url": "/holidays"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/month.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Lịch tháng với ngày Âm"
+    },
+    {
+      "src": "/screenshots/day-detail.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Chi tiết ngày"
+    },
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "2880x1800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Lịch tháng trên máy tính"
+    }
   ]
 }

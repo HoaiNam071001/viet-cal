@@ -1,7 +1,7 @@
 import { Moon, Search, Sun } from 'lucide-react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { APP_NAME } from '@/app/config/app.config'
-import { NAV_ITEMS } from '@/app/config/navigation'
+import { isNavItemActive, NAV_ITEMS } from '@/app/config/navigation'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { SearchDialog } from '@/features/search/components/SearchDialog'
 import { Button } from '@/shared/components/ui/Button'
@@ -33,10 +33,8 @@ export function AppHeader() {
     <>
       <header className="glass border-border sticky top-0 z-30 border-b">
         <div className="mx-auto flex h-15 max-w-[1240px] items-center gap-3 px-4 sm:px-6">
-          <NavLink to="/calendar/month" className="flex items-center gap-2.5">
-            <span className="bg-primary text-primary-fg grid size-9 place-items-center rounded-2xl text-sm font-bold">
-              L
-            </span>
+          <NavLink to="/" className="flex items-center gap-2.5">
+            <img src="/logo.svg" alt="" width={36} height={36} className="size-9 rounded-[10px]" />
             <span className="text-text hidden text-[15px] font-semibold sm:block">{APP_NAME}</span>
           </NavLink>
 
@@ -47,7 +45,7 @@ export function AppHeader() {
                 to={item.to}
                 className={cn(
                   'rounded-2xl px-3.5 py-2 text-sm font-medium transition-colors',
-                  pathname.startsWith(item.match) ? 'bg-surface-2 text-text' : 'text-muted hover:text-text',
+                  isNavItemActive(item, pathname) ? 'bg-surface-2 text-text' : 'text-muted hover:text-text',
                 )}
               >
                 {item.label}

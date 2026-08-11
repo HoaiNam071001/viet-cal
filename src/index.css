@@ -20,20 +20,34 @@
   --text-muted: oklch(52% 0.015 300);
   --text-subtle: oklch(66% 0.012 300);
 
-  --primary: oklch(56% 0.198 22);
-  --primary-hover: oklch(51% 0.198 22);
+  --primary: oklch(64% 0.185 148);
+  --primary-hover: oklch(58% 0.185 148);
   --primary-fg: oklch(100% 0 0);
-  --primary-soft: oklch(95.5% 0.03 22);
-  --primary-ring: oklch(56% 0.198 22 / 0.35);
+  --primary-soft: oklch(95% 0.055 150);
+  --primary-ring: oklch(64% 0.185 148 / 0.35);
 
-  --accent: oklch(64% 0.128 68);
-  --accent-soft: oklch(95.5% 0.035 75);
+  --accent: oklch(66% 0.135 72);
+  --accent-soft: oklch(95.5% 0.04 78);
 
-  --weekend: oklch(56% 0.14 22);
+  --weekend: oklch(58% 0.17 25);
   --today-ring: var(--primary);
 
   --shadow-soft: 0 1px 2px oklch(20% 0.02 300 / 0.04), 0 8px 24px oklch(20% 0.02 300 / 0.06);
   --shadow-panel: 0 2px 6px oklch(20% 0.02 300 / 0.06), 0 24px 60px oklch(20% 0.02 300 / 0.12);
+
+  /* Glass widgets: a translucent pane, a top sheen and a hairline highlight. */
+  --glass-bg: linear-gradient(
+    155deg,
+    oklch(100% 0 0 / 0.86) 0%,
+    oklch(100% 0 0 / 0.62) 46%,
+    oklch(97% 0.012 150 / 0.55) 100%
+  );
+  --glass-sheen: linear-gradient(180deg, oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0) 62%);
+  --glass-border: oklch(100% 0 0 / 0.7);
+  --glass-shadow:
+    0 1px 1px oklch(100% 0 0 / 0.6) inset, 0 1px 2px oklch(30% 0.03 150 / 0.05),
+    0 12px 32px oklch(30% 0.03 150 / 0.09);
+  --glass-tint: oklch(70% 0.16 150 / 0.1);
 
   color-scheme: light;
 }
@@ -50,19 +64,32 @@
   --text-muted: oklch(72% 0.014 300);
   --text-subtle: oklch(58% 0.014 300);
 
-  --primary: oklch(68% 0.176 22);
-  --primary-hover: oklch(73% 0.176 22);
-  --primary-fg: oklch(17% 0.02 22);
-  --primary-soft: oklch(30% 0.07 22);
-  --primary-ring: oklch(68% 0.176 22 / 0.4);
+  --primary: oklch(76% 0.175 150);
+  --primary-hover: oklch(81% 0.16 150);
+  --primary-fg: oklch(20% 0.05 150);
+  --primary-soft: oklch(31% 0.075 152);
+  --primary-ring: oklch(76% 0.175 150 / 0.4);
 
-  --accent: oklch(79% 0.115 72);
-  --accent-soft: oklch(30% 0.05 72);
+  --accent: oklch(80% 0.12 76);
+  --accent-soft: oklch(31% 0.055 76);
 
-  --weekend: oklch(74% 0.13 22);
+  --weekend: oklch(72% 0.145 25);
 
   --shadow-soft: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.28);
   --shadow-panel: 0 2px 6px oklch(0% 0 0 / 0.35), 0 24px 60px oklch(0% 0 0 / 0.5);
+
+  --glass-bg: linear-gradient(
+    155deg,
+    oklch(32% 0.02 200 / 0.72) 0%,
+    oklch(26% 0.018 210 / 0.55) 46%,
+    oklch(30% 0.035 155 / 0.5) 100%
+  );
+  --glass-sheen: linear-gradient(180deg, oklch(100% 0 0 / 0.1), oklch(100% 0 0 / 0) 60%);
+  --glass-border: oklch(100% 0 0 / 0.12);
+  --glass-shadow:
+    0 1px 1px oklch(100% 0 0 / 0.08) inset, 0 2px 6px oklch(0% 0 0 / 0.3),
+    0 18px 44px oklch(0% 0 0 / 0.4);
+  --glass-tint: oklch(76% 0.16 150 / 0.12);
 
   color-scheme: dark;
 }
@@ -141,7 +168,11 @@
   body {
     margin: 0;
     min-height: 100svh;
-    background: var(--bg);
+    /* Soft green light sources give the glass panes something to refract. */
+    background:
+      radial-gradient(70% 45% at 4% -8%, var(--primary-soft), transparent 58%),
+      radial-gradient(55% 32% at 98% 2%, var(--accent-soft), transparent 60%), var(--bg);
+    background-attachment: fixed;
     color: var(--text);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
@@ -178,6 +209,41 @@
 }
 
 @layer components {
+  /*
+   * Widgets: a translucent pane over the page, with a glossy sheen on top and a
+   * hairline inner highlight. `isolation` keeps the sheen under the content.
+   */
+  .glass-card {
+    position: relative;
+    isolation: isolate;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(20px) saturate(1.7);
+    -webkit-backdrop-filter: blur(20px) saturate(1.7);
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--glass-sheen);
+    pointer-events: none;
+  }
+
+  /* Optional brand wash for hero-ish widgets (countdown, install prompt). */
+  .glass-card-tinted::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(120% 90% at 12% 0%, var(--glass-tint), transparent 62%);
+    pointer-events: none;
+  }
+
   /* A very light glass wash used by the app header and bottom navigation. */
   .glass {
     background: color-mix(in oklab, var(--bg) 78%, transparent);

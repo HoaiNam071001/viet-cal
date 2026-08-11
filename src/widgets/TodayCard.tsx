@@ -48,6 +48,7 @@ export function TodayCard({ onOpen, compact = false, className }: TodayCardProps
   if (compact) {
     return (
       <Card
+        variant="glass"
         className={cn('p-4', onOpen && 'cursor-pointer', className)}
         onClick={onOpen ? () => onOpen(today) : undefined}
       >
@@ -57,7 +58,7 @@ export function TodayCard({ onOpen, compact = false, className }: TodayCardProps
   }
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card variant="glass" className={cn('overflow-hidden', className)}>
       <CardHeader title="Hôm nay" icon={<Sun className="size-3.5" />} />
       <div
         className={cn('px-5 pt-1 pb-5', onOpen && 'cursor-pointer')}

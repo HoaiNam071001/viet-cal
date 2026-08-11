@@ -23,7 +23,7 @@ export function MiniCalendarCard({ selected, today, onSelectDate, className }: M
   }, [selected.month, selected.year])
 
   return (
-    <Card className={cn('p-4', className)}>
+    <Card variant="glass" className={cn('p-4', className)}>
       <div className="mb-3 flex items-center justify-between">
         <span className="text-text text-sm font-semibold">
           Tháng {cursor.month}, {cursor.year}

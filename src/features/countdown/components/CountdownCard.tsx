@@ -18,9 +18,10 @@ export function CountdownCard({ item, onSelect, className }: CountdownCardProps)
 
   return (
     <Card
+      variant="tinted"
       className={cn(
-        'from-primary-soft to-surface overflow-hidden bg-gradient-to-br',
-        onSelect && 'hover:border-border-strong cursor-pointer transition-colors',
+        'overflow-hidden',
+        onSelect && 'cursor-pointer transition-shadow hover:shadow-panel',
         className,
       )}
       onClick={onSelect ? () => onSelect(item) : undefined}

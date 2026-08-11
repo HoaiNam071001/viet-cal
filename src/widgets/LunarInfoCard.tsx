@@ -10,7 +10,7 @@ export function LunarInfoCard({ date, className }: { date: CivilDate; className?
   const leapMonth = getLeapMonthOfYear(info.lunar.year)
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card variant="glass" className={cn('overflow-hidden', className)}>
       <CardHeader title="Âm lịch" icon={<Moon className="size-3.5" />} />
       <div className="px-5 pt-1 pb-4">
         <p className="text-accent text-lg font-semibold">{formatLunarDayMonth(info.lunar)}</p>

@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import { InstallPrompt } from '@/features/pwa/components/InstallPrompt'
 import { AppHeader } from './AppHeader'
 import { BottomNav } from './BottomNav'
 
@@ -11,6 +12,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <BottomNav />
+      <InstallPrompt />
     </div>
   )
 }
