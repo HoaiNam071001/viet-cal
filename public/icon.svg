@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8544f" />
+      <stop offset="1" stop-color="#c3241f" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+  <rect x="96" y="120" width="320" height="288" rx="48" fill="#fff" />
+  <rect x="96" y="120" width="320" height="72" rx="36" fill="#fbe3e0" />
+  <circle cx="168" cy="156" r="12" fill="#c3241f" />
+  <circle cx="344" cy="156" r="12" fill="#c3241f" />
+  <text x="256" y="330" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="132" font-weight="700" fill="#1b1620" text-anchor="middle">15</text>
+  <text x="256" y="378" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="42" font-weight="600" fill="#c98a25" text-anchor="middle">Âm 29/6</text>
+</svg>

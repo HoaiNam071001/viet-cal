@@ -96,14 +96,12 @@ export function Sheet({ open, onClose, title, children, desktopVariant = 'panel'
           </div>
         ) : null}
 
-        {title ? (
-          <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-3 pb-3">
-            <h2 className="text-text text-lg font-semibold">{title}</h2>
-            <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Đóng">
-              <X className="size-4.5" />
-            </Button>
-          </div>
-        ) : null}
+        <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-3 pb-3">
+          {title ? <h2 className="text-text text-lg font-semibold">{title}</h2> : <span />}
+          <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Đóng">
+            <X className="size-4.5" />
+          </Button>
+        </div>
 
         <div className="no-scrollbar safe-bottom flex-1 overflow-y-auto overscroll-contain px-5 pb-6">
           {children}
