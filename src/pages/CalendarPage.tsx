@@ -1,4 +1,6 @@
+import { Repeat, Sparkles } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { CalendarHeader } from '@/features/calendar/components/CalendarHeader'
 import { DayDetail } from '@/features/calendar/components/DayDetail'
 import { DayView } from '@/features/calendar/components/DayView'
@@ -7,6 +9,7 @@ import { YearView } from '@/features/calendar/components/YearView'
 import { useCalendarState } from '@/features/calendar/hooks/useCalendarState'
 import { CountdownCard } from '@/features/countdown/components/CountdownCard'
 import { useUpcomingHolidays } from '@/features/holidays/hooks/useHolidays'
+import { Button } from '@/shared/components/ui/Button'
 import { Card } from '@/shared/components/ui/Card'
 import { Sheet } from '@/shared/components/ui/Sheet'
 import { useIsDesktop } from '@/shared/hooks/useMediaQuery'
@@ -42,6 +45,22 @@ export function CalendarPage() {
           onViewChange={setView}
         />
 
+        {/* Mobile only — desktop reaches these from the header nav instead of a tab. */}
+        <div className="mt-3 grid grid-cols-2 gap-2 lg:hidden">
+          <Button asChild variant="secondary" size="sm" className="gap-1.5">
+            <Link to="/convert">
+              <Repeat className="size-4" />
+              Đổi ngày
+            </Link>
+          </Button>
+          <Button asChild variant="secondary" size="sm" className="gap-1.5">
+            <Link to="/holidays">
+              <Sparkles className="size-4" />
+              Ngày lễ
+            </Link>
+          </Button>
+        </div>
+
         <div className="mt-4">
           {view === 'month' ? (
             <Card className="p-2 sm:p-3">
@@ -56,7 +75,7 @@ export function CalendarPage() {
             </Card>
           ) : null}
 
-          {view === 'day' ? <DayView date={date} today={today} /> : null}
+          {view === 'day' ? <DayView date={date} /> : null}
 
           {view === 'year' ? (
             <YearView

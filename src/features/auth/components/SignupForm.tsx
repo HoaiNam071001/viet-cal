@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { signUpWithPassword } from '@/features/auth/services/auth.service'
 import { toAuthErrorMessage } from '@/features/auth/types/auth'
 import { Button } from '@/shared/components/ui/Button'
@@ -8,6 +8,7 @@ import { GoogleSignInButton } from './GoogleSignInButton'
 
 export function SignupForm() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -32,8 +33,12 @@ export function SignupForm() {
     setIsSubmitting(true)
     try {
       const { confirmed } = await signUpWithPassword(email, password, displayName)
-      if (confirmed) navigate('/')
-      else setAwaitingConfirmation(true)
+      if (confirmed) {
+        const from = (location.state as { from?: string } | null)?.from
+        navigate(from ?? '/', { replace: true })
+      } else {
+        setAwaitingConfirmation(true)
+      }
     } catch (err) {
       setError(toAuthErrorMessage(err))
     } finally {

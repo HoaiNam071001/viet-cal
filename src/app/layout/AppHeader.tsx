@@ -1,9 +1,10 @@
 import { Moon, Search, Sun } from 'lucide-react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { APP_NAME } from '@/app/config/app.config'
-import { getNavItems, isNavItemActive } from '@/app/config/navigation'
+import { getDesktopNavItems, isNavItemActive } from '@/app/config/navigation'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useTheme } from '@/app/providers/ThemeProvider'
+import { UserMenu } from '@/features/auth/components/UserMenu'
 import { SearchDialog } from '@/features/search/components/SearchDialog'
 import { Button } from '@/shared/components/ui/Button'
 import type { CivilDate } from '@/shared/types'
@@ -17,7 +18,7 @@ export function AppHeader() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [searchOpen, setSearchOpen] = useState(false)
-  const navItems = getNavItems(Boolean(user))
+  const navItems = getDesktopNavItems(Boolean(user))
 
   const goToDate = (date: CivilDate) => navigate(`/calendar/day?date=${toKey(date)}`)
 
@@ -72,6 +73,7 @@ export function AppHeader() {
             <Button variant="ghost" size="icon-sm" onClick={toggle} aria-label="Đổi giao diện sáng/tối">
               {resolved === 'dark' ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
             </Button>
+            <UserMenu />
           </div>
         </div>
       </header>

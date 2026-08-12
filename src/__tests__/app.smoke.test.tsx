@@ -75,7 +75,7 @@ describe('app smoke test', () => {
 
   it('renders the day and year views', () => {
     renderApp('/calendar/day?date=2026-08-11')
-    expect(screen.getByText('Lịch trình')).toBeTruthy()
+    expect(screen.getByText('Can chi')).toBeTruthy()
     cleanup()
 
     renderApp('/calendar/year?date=2026-08-11')

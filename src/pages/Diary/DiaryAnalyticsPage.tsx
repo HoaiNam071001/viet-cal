@@ -12,7 +12,7 @@ export function DiaryAnalyticsPage() {
   const stats = useDiaryStats()
 
   return (
-    <div className="mx-auto max-w-xl">
+    <div className="mx-auto max-w-xl lg:max-w-3xl">
       <Button variant="ghost" size="sm" onClick={() => navigate('/diary')} className="mb-3 -ml-2 gap-1.5">
         <ChevronLeft className="size-4" />
         Nhật ký
@@ -24,15 +24,17 @@ export function DiaryAnalyticsPage() {
       <div className="flex flex-col gap-4">
         <StatsCard stats={stats} />
 
-        <Card className="p-5">
-          <CardHeader title="Hoạt động 12 tuần" className="px-0 pt-0" />
-          <DiaryHeatmap heatmap={stats.heatmap} />
-        </Card>
+        <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start">
+          <Card className="p-5">
+            <CardHeader title="Hoạt động 12 tuần" className="px-0 pt-0" />
+            <DiaryHeatmap heatmap={stats.heatmap} />
+          </Card>
 
-        <Card className="p-5">
-          <CardHeader title="Cảm xúc" className="px-0 pt-0" />
-          <MoodDistribution moodCounts={stats.moodCounts} />
-        </Card>
+          <Card className="p-5">
+            <CardHeader title="Cảm xúc" className="px-0 pt-0" />
+            <MoodDistribution moodCounts={stats.moodCounts} />
+          </Card>
+        </div>
       </div>
     </div>
   )

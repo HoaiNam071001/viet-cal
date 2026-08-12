@@ -4,9 +4,11 @@ import { useState, type KeyboardEvent } from 'react'
 interface TagInputProps {
   tags: string[]
   onChange: (tags: string[]) => void
+  /** Tags already used elsewhere — offered as one-tap suggestions. */
+  suggestions?: string[]
 }
 
-export function TagInput({ tags, onChange }: TagInputProps) {
+export function TagInput({ tags, onChange, suggestions = [] }: TagInputProps) {
   const [draft, setDraft] = useState('')
 
   const commit = () => {
@@ -24,24 +26,43 @@ export function TagInput({ tags, onChange }: TagInputProps) {
     }
   }
 
+  const unusedSuggestions = suggestions.filter((tag) => !tags.includes(tag))
+
   return (
-    <div className="bg-surface-2 border-border flex flex-wrap items-center gap-1.5 rounded-2xl border p-2">
-      {tags.map((tag) => (
-        <span key={tag} className="bg-surface-3 text-text flex items-center gap-1 rounded-lg px-2 py-1 text-xs">
-          #{tag}
-          <button type="button" onClick={() => onChange(tags.filter((t) => t !== tag))} aria-label={`Xoá thẻ ${tag}`}>
-            <X className="size-3" />
-          </button>
-        </span>
-      ))}
-      <input
-        value={draft}
-        onChange={(event) => setDraft(event.target.value)}
-        onKeyDown={onKeyDown}
-        onBlur={commit}
-        placeholder={tags.length ? '' : 'Thêm thẻ…'}
-        className="text-text min-w-20 flex-1 bg-transparent px-1 py-1 text-xs outline-none"
-      />
+    <div className="flex flex-col gap-2">
+      <div className="bg-surface-2 border-border flex flex-wrap items-center gap-1.5 rounded-2xl border p-2">
+        {tags.map((tag) => (
+          <span key={tag} className="bg-surface-3 text-text flex items-center gap-1 rounded-lg px-2 py-1 text-xs">
+            #{tag}
+            <button type="button" onClick={() => onChange(tags.filter((t) => t !== tag))} aria-label={`Xoá thẻ ${tag}`}>
+              <X className="size-3" />
+            </button>
+          </span>
+        ))}
+        <input
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={onKeyDown}
+          onBlur={commit}
+          placeholder={tags.length ? '' : 'Thêm thẻ…'}
+          className="text-text min-w-20 flex-1 bg-transparent px-1 py-1 text-xs outline-none"
+        />
+      </div>
+
+      {unusedSuggestions.length > 0 ? (
+        <div className="flex flex-wrap gap-1.5">
+          {unusedSuggestions.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => onChange([...tags, tag])}
+              className="bg-surface-2 text-muted hover:bg-surface-3 rounded-lg px-2 py-1 text-xs"
+            >
+              #{tag}
+            </button>
+          ))}
+        </div>
+      ) : null}
     </div>
   )
 }

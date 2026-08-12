@@ -143,6 +143,24 @@ export async function listAllEntries(userId: string): Promise<DiaryEntry[]> {
   return (data ?? []).map(mapEntry)
 }
 
+/** Distinct tags across all of the user's entries, most-used first — powers tag
+ * suggestions in the editor and the tag filter in the diary list. */
+export async function listAllTags(userId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from('diary_entries')
+    .select('tags')
+    .eq('user_id', userId)
+    .is('deleted_at', null)
+
+  if (error) throw error
+
+  const tally = new Map<string, number>()
+  for (const row of data ?? []) {
+    for (const tag of row.tags ?? []) tally.set(tag, (tally.get(tag) ?? 0) + 1)
+  }
+  return [...tally.entries()].sort((a, b) => b[1] - a[1]).map(([tag]) => tag)
+}
+
 export async function deleteEntry(id: string): Promise<void> {
   const { error } = await supabase
     .from('diary_entries')

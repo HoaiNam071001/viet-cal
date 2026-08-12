@@ -1,4 +1,4 @@
-import { BookHeart, CalendarHeart, Clock, Moon, PartyPopper, Sparkles } from 'lucide-react'
+import { BookHeart, Clock, Moon, PartyPopper, Sparkles } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useSettings } from '@/app/providers/SettingsProvider'
 import { DiaryDaySection } from '@/features/diary/components/DiaryDaySection'
@@ -7,11 +7,9 @@ import { useHolidaysOfDate } from '@/features/holidays/hooks/useHolidays'
 import { formatLunarTraditional, getAuspiciousHours, useLunarDate } from '@/features/lunar'
 import { ShareDayButton } from '@/features/share/components/ShareDayButton'
 import { Badge } from '@/shared/components/ui/Badge'
-import { EmptyState } from '@/shared/components/ui/EmptyState'
 import type { CivilDate } from '@/shared/types'
 import { cn } from '@/shared/utils/cn'
 import { formatDateVN, getWeekdayLabel, isWeekend } from '@/shared/utils/date'
-import { useEventsForDate } from '../hooks/useEvents'
 
 interface DayDetailProps {
   date: CivilDate
@@ -43,7 +41,6 @@ export function DayDetail({ date, className }: DayDetailProps) {
   const { settings } = useSettings()
   const info = useLunarDate(date)
   const holidays = useHolidaysOfDate(date)
-  const events = useEventsForDate(date)
   const auspicious = getAuspiciousHours(date)
 
   return (
@@ -126,28 +123,6 @@ export function DayDetail({ date, className }: DayDetailProps) {
           </div>
         </Section>
       ) : null}
-
-      <Section icon={<CalendarHeart className="size-3.5" />} title="Sự kiện">
-        {events.length > 0 ? (
-          <ul className="flex flex-col gap-2">
-            {events.map((event) => (
-              <li key={event.id} className="bg-surface-2 rounded-2xl px-3.5 py-2.5">
-                <p className="text-text text-sm font-medium">{event.title}</p>
-                {event.startTime ? (
-                  <p className="text-subtle text-xs tabular-nums">{event.startTime}</p>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <EmptyState
-            className="py-6"
-            icon={<CalendarHeart className="size-6" />}
-            title="Chưa có sự kiện"
-            description="Bạn có thể thêm sự kiện khi tính năng nhắc lịch được bật."
-          />
-        )}
-      </Section>
     </div>
   )
 }

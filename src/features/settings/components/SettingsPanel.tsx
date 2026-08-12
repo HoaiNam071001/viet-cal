@@ -1,10 +1,10 @@
-import { BookHeart, Monitor, Moon, Sun } from 'lucide-react'
+import { BookHeart, ChevronRight, Monitor, Moon, Sun } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { useSettings, type Settings } from '@/app/providers/SettingsProvider'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { AccountCard } from '@/features/auth/components/AccountCard'
-import { CategoryManager } from '@/features/diary/components/CategoryManager'
 import { DataExportCard } from '@/features/diary/components/DataExportCard'
 import { Card, CardHeader } from '@/shared/components/ui/Card'
 import { Segmented } from '@/shared/components/ui/Segmented'
@@ -40,6 +40,7 @@ export function SettingsPanel({ className }: { className?: string }) {
   const { settings, update } = useSettings()
   const { usedRemote, isLoading } = useHolidayContext()
   const { user } = useAuth()
+  const navigate = useNavigate()
 
   return (
     <div className={cn('flex flex-col gap-4', className)}>
@@ -48,9 +49,16 @@ export function SettingsPanel({ className }: { className?: string }) {
       {user ? (
         <>
           <Card>
-            <CardHeader title="Danh mục nhật ký" icon={<BookHeart className="size-3.5" />} />
+            <CardHeader title="Nhật ký" icon={<BookHeart className="size-3.5" />} />
             <div className="px-5 pt-1 pb-5">
-              <CategoryManager />
+              <button
+                type="button"
+                onClick={() => navigate('/diary/categories')}
+                className="bg-surface-2 hover:bg-surface-3 flex w-full items-center justify-between gap-3 rounded-2xl px-3.5 py-3 text-left transition-colors"
+              >
+                <span className="text-text text-sm font-medium">Quản lý danh mục</span>
+                <ChevronRight className="text-subtle size-4" />
+              </button>
             </div>
           </Card>
 

@@ -11,6 +11,7 @@ import { DiaryListPage } from '@/pages/Diary/DiaryListPage'
 import { DiaryEditorPage } from '@/pages/Diary/DiaryEditorPage'
 import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage'
 import { DiaryAnalyticsPage } from '@/pages/Diary/DiaryAnalyticsPage'
+import { DiaryCategoriesPage } from '@/pages/Diary/DiaryCategoriesPage'
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute'
 
 export const router = createBrowserRouter([
@@ -21,11 +22,39 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       // The view is part of the path and the day is a query param, so any
       // screen can be linked to: /calendar/day?date=2026-08-11
-      { path: 'calendar/:view', element: <CalendarPage /> },
+      {
+        path: 'calendar/:view',
+        element: (
+          <ProtectedRoute>
+            <CalendarPage />
+          </ProtectedRoute>
+        ),
+      },
       { path: 'calendar', element: <Navigate to="/calendar/month" replace /> },
-      { path: 'convert', element: <ConverterPage /> },
-      { path: 'holidays', element: <HolidaysPage /> },
-      { path: 'settings', element: <SettingsPage /> },
+      {
+        path: 'convert',
+        element: (
+          <ProtectedRoute>
+            <ConverterPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'holidays',
+        element: (
+          <ProtectedRoute>
+            <HolidaysPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'settings',
+        element: (
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        ),
+      },
       { path: 'auth/login', element: <LoginPage /> },
       { path: 'auth/signup', element: <SignupPage /> },
       {
@@ -33,6 +62,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <DiaryListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'diary/categories',
+        element: (
+          <ProtectedRoute>
+            <DiaryCategoriesPage />
           </ProtectedRoute>
         ),
       },

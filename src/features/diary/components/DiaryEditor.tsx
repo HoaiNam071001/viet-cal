@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/ui/Button'
 import type { CivilDate } from '@/shared/types'
 import { toKey } from '@/shared/utils/date'
 import { useDiaryCategories } from '../hooks/useDiaryCategories'
+import { useDiaryTags } from '../hooks/useDiaryTags'
 import { createEntry, deleteEntry, updateEntry } from '../services/diary.service'
 import type { DiaryEntry, DiaryEntryInput } from '../types/diary'
 import { CategoryPicker } from './CategoryPicker'
@@ -36,6 +37,7 @@ export function DiaryEditor({
   const { user } = useAuth()
   const { invalidateMonth } = useDiaryContext()
   const { categories, add: addCategory } = useDiaryCategories()
+  const tagSuggestions = useDiaryTags()
 
   const [title, setTitle] = useState(entry?.title ?? '')
   const [content, setContent] = useState(entry?.content ?? initialContent ?? '')
@@ -123,7 +125,7 @@ export function DiaryEditor({
 
       <div>
         <p className="text-subtle mb-2 text-[11px] font-semibold tracking-[0.14em] uppercase">Thẻ</p>
-        <TagInput tags={tags} onChange={setTags} />
+        <TagInput tags={tags} onChange={setTags} suggestions={tagSuggestions} />
       </div>
 
       {error ? <p className="text-primary text-sm">{error}</p> : null}
