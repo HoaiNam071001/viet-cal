@@ -12,6 +12,7 @@ import {
 import { useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { APP_NAME } from '@/app/config/app.config'
+import { useTheme } from '@/app/providers/ThemeProvider'
 import { CountdownCard } from '@/features/countdown/components/CountdownCard'
 import { useUpcomingHolidays } from '@/features/holidays/hooks/useHolidays'
 import { useInstallPrompt } from '@/features/pwa/hooks/useInstallPrompt'
@@ -58,9 +59,24 @@ const FEATURES: Array<{ icon: ReactNode; title: string; description: string }> =
 ]
 
 const SCREENSHOTS = [
-  { src: '/screenshots/month.png', label: 'Lịch tháng', caption: 'Ngày Dương và ngày Âm trong cùng một ô' },
-  { src: '/screenshots/day-detail.png', label: 'Chi tiết ngày', caption: 'Can chi, tiết khí, giờ hoàng đạo' },
-  { src: '/screenshots/convert.png', label: 'Đổi ngày', caption: 'Dương ↔ Âm, có tháng nhuận' },
+  {
+    light: '/screenshots/month.png',
+    dark: '/screenshots/month-dark.png',
+    label: 'Lịch tháng',
+    caption: 'Ngày Dương và ngày Âm trong cùng một ô',
+  },
+  {
+    light: '/screenshots/day-detail.png',
+    dark: '/screenshots/day-detail-dark.png',
+    label: 'Chi tiết ngày',
+    caption: 'Can chi, tiết khí, giờ hoàng đạo',
+  },
+  {
+    light: '/screenshots/convert.png',
+    dark: '/screenshots/convert-dark.png',
+    label: 'Đổi ngày',
+    caption: 'Dương ↔ Âm, có tháng nhuận',
+  },
 ]
 
 export function HomePage() {
@@ -68,6 +84,7 @@ export function HomePage() {
   const navigate = useNavigate()
   const [nextHoliday] = useUpcomingHolidays(1)
   const { canInstall, needsManualInstructions, install } = useInstallPrompt()
+  const { resolved } = useTheme()
 
   const openDate = (date: CivilDate) => navigate(`/calendar/day?date=${toKey(date)}`)
 
@@ -156,7 +173,7 @@ export function HomePage() {
         />
         <div className="grid gap-4 sm:grid-cols-3">
           {SCREENSHOTS.map((shot) => (
-            <ScreenshotFrame key={shot.src} {...shot} />
+            <ScreenshotFrame key={shot.light} src={resolved === 'dark' ? shot.dark : shot.light} {...shot} />
           ))}
         </div>
       </section>

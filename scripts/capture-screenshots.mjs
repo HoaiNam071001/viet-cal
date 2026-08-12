@@ -31,13 +31,43 @@ const SHOTS = [
   { name: 'desktop', url: '/calendar/month?date=2026-08-11', width: 1440, height: 900, theme: 'light' },
   { name: 'home', url: '/', width: 1440, height: 980, theme: 'light' },
   { name: 'month-dark', url: '/calendar/month?date=2026-08-11', width: 390, height: 844, theme: 'dark' },
+  {
+    name: 'day-detail-dark',
+    url: '/calendar/month?date=2026-09-02',
+    width: 390,
+    height: 844,
+    theme: 'dark',
+    click: '[aria-label="Ngày 2 tháng 9 năm 2026"]',
+  },
+  { name: 'convert-dark', url: '/convert', width: 390, height: 844, theme: 'dark' },
 ]
+
+const AUTH_EMAIL = process.env.AUTH_EMAIL
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD
 
 const browser = await puppeteer.launch({
   executablePath: CHROME,
   headless: 'shell',
   args: ['--hide-scrollbars', '--no-first-run', '--no-default-browser-check'],
 })
+
+// Most routes are behind <ProtectedRoute>; sign in once so the session cookie
+// carries over to every page opened below.
+if (AUTH_EMAIL && AUTH_PASSWORD) {
+  const loginPage = await browser.newPage()
+  await loginPage.goto(`${BASE}/auth/login`, { waitUntil: 'networkidle2', timeout: 30_000 })
+  await loginPage.type('input[name="email"]', AUTH_EMAIL)
+  await loginPage.type('input[name="password"]', AUTH_PASSWORD)
+  // The redirect after sign-in is a client-side route change, not a full
+  // navigation, so poll the URL instead of waiting for a navigation event.
+  await loginPage.evaluate(() => document.querySelector('form').requestSubmit())
+  const signedIn = await loginPage.waitForFunction(() => !location.pathname.startsWith('/auth/login'), {
+    timeout: 15_000,
+  })
+  if (!signedIn) throw new Error('Sign-in did not redirect away from /auth/login')
+  await loginPage.close()
+  console.log(`✓ signed in as ${AUTH_EMAIL}`)
+}
 
 let overflowed = false
 
