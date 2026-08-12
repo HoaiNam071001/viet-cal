@@ -1,7 +1,8 @@
-import { LogOut, User as UserIcon } from 'lucide-react'
+import { KeyRound, LogOut, User as UserIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/app/providers/AuthProvider'
+import { ChangePasswordSheet } from '@/features/auth/components/ChangePasswordSheet'
 import { signOut } from '@/features/auth/services/auth.service'
 import { Button } from '@/shared/components/ui/Button'
 import { Card, CardHeader } from '@/shared/components/ui/Card'
@@ -10,6 +11,7 @@ export function AccountCard() {
   const { user, isLoading } = useAuth()
   const navigate = useNavigate()
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [passwordSheetOpen, setPasswordSheetOpen] = useState(false)
 
   if (isLoading) return null
 
@@ -46,7 +48,7 @@ export function AccountCard() {
   return (
     <Card>
       <CardHeader title="Tài khoản" icon={<UserIcon className="size-3.5" />} />
-      <div className="flex items-center justify-between gap-3 px-5 pt-1 pb-5">
+      <div className="flex items-center justify-between gap-3 px-5 pt-1 pb-3">
         <div className="min-w-0">
           <p className="text-text truncate text-sm font-medium">{displayName}</p>
           <p className="text-subtle truncate text-xs">{user.email}</p>
@@ -56,6 +58,19 @@ export function AccountCard() {
           Đăng xuất
         </Button>
       </div>
+
+      <div className="px-5 pb-5">
+        <button
+          type="button"
+          onClick={() => setPasswordSheetOpen(true)}
+          className="bg-surface-2 hover:bg-surface-3 flex w-full items-center gap-2.5 rounded-2xl px-3.5 py-3 text-left transition-colors"
+        >
+          <KeyRound className="text-subtle size-4" />
+          <span className="text-text text-sm font-medium">Đổi mật khẩu</span>
+        </button>
+      </div>
+
+      <ChangePasswordSheet open={passwordSheetOpen} onClose={() => setPasswordSheetOpen(false)} />
     </Card>
   )
 }

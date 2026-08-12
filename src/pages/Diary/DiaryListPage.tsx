@@ -1,13 +1,22 @@
 import { BarChart3, Plus } from 'lucide-react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { DiaryDatePickerSheet } from '@/features/diary/components/DiaryDatePickerSheet'
 import { DiaryList } from '@/features/diary/components/DiaryList'
 import { Button } from '@/shared/components/ui/Button'
 import { useToday } from '@/shared/hooks/useToday'
+import type { CivilDate } from '@/shared/types'
 import { toKey } from '@/shared/utils/date'
 
 export function DiaryListPage() {
   const navigate = useNavigate()
   const today = useToday()
+  const [pickerOpen, setPickerOpen] = useState(false)
+
+  const startEntry = (date: CivilDate) => {
+    setPickerOpen(false)
+    navigate(`/diary/new?date=${toKey(date)}`)
+  }
 
   return (
     <div className="relative mx-auto max-w-xl pb-4">
@@ -26,12 +35,14 @@ export function DiaryListPage() {
       <Button
         variant="primary"
         size="icon"
-        onClick={() => navigate(`/diary/new?date=${toKey(today)}`)}
+        onClick={() => setPickerOpen(true)}
         aria-label="Viết nhật ký mới"
         className="fixed right-4 bottom-20 z-20 shadow-panel lg:absolute lg:top-0 lg:right-0 lg:bottom-auto"
       >
         <Plus className="size-5" />
       </Button>
+
+      <DiaryDatePickerSheet open={pickerOpen} onClose={() => setPickerOpen(false)} today={today} onPick={startEntry} />
     </div>
   )
 }

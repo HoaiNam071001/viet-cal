@@ -25,6 +25,11 @@ export async function signOut(): Promise<void> {
   if (error) throw error
 }
 
+export async function updatePassword(newPassword: string): Promise<void> {
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) throw error
+}
+
 /** Redirects the browser to Google, then back to this app — no confirmation email involved. */
 export async function signInWithGoogle(): Promise<void> {
   const { error } = await supabase.auth.signInWithOAuth({
