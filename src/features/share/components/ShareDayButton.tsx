@@ -1,5 +1,6 @@
 import { Check, Share2 } from 'lucide-react'
 import { useState } from 'react'
+import { APP_NAME } from '@/app/config/app.config'
 import { useHolidaysOfDate } from '@/features/holidays/hooks/useHolidays'
 import { Button } from '@/shared/components/ui/Button'
 import type { CivilDate } from '@/shared/types'
@@ -22,7 +23,7 @@ export function ShareDayButton({ date }: { date: CivilDate }) {
 
       const file = new File([blob], `lich-viet-${toKey(date)}.png`, { type: 'image/png' })
       if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: 'Lịch Việt' })
+        await navigator.share({ files: [file], title: APP_NAME })
       } else {
         const url = URL.createObjectURL(blob)
         const link = document.createElement('a')

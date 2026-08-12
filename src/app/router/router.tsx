@@ -5,6 +5,13 @@ import { HomePage } from '@/pages/HomePage'
 import { ConverterPage } from '@/pages/ConverterPage'
 import { HolidaysPage } from '@/pages/HolidaysPage'
 import { SettingsPage } from '@/pages/SettingsPage'
+import { LoginPage } from '@/pages/Auth/LoginPage'
+import { SignupPage } from '@/pages/Auth/SignupPage'
+import { DiaryListPage } from '@/pages/Diary/DiaryListPage'
+import { DiaryEditorPage } from '@/pages/Diary/DiaryEditorPage'
+import { DiaryDetailPage } from '@/pages/Diary/DiaryDetailPage'
+import { DiaryAnalyticsPage } from '@/pages/Diary/DiaryAnalyticsPage'
+import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +26,48 @@ export const router = createBrowserRouter([
       { path: 'convert', element: <ConverterPage /> },
       { path: 'holidays', element: <HolidaysPage /> },
       { path: 'settings', element: <SettingsPage /> },
+      { path: 'auth/login', element: <LoginPage /> },
+      { path: 'auth/signup', element: <SignupPage /> },
+      {
+        path: 'diary',
+        element: (
+          <ProtectedRoute>
+            <DiaryListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'diary/new',
+        element: (
+          <ProtectedRoute>
+            <DiaryEditorPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'diary/:id',
+        element: (
+          <ProtectedRoute>
+            <DiaryDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'diary/:id/edit',
+        element: (
+          <ProtectedRoute>
+            <DiaryEditorPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'diary/analytics',
+        element: (
+          <ProtectedRoute>
+            <DiaryAnalyticsPage />
+          </ProtectedRoute>
+        ),
+      },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

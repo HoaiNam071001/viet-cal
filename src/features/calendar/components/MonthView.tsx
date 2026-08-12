@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react'
+import { useDiaryContext } from '@/app/providers/DiaryProvider'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
 import { useSettings } from '@/app/providers/SettingsProvider'
 import { useSwipe } from '@/shared/hooks/useSwipe'
 import type { CivilDate } from '@/shared/types'
 import { cn } from '@/shared/utils/cn'
-import { WEEKDAY_SHORT_MON_FIRST, isSameDate } from '@/shared/utils/date'
+import { WEEKDAY_SHORT_MON_FIRST, isSameDate, toKey } from '@/shared/utils/date'
 import type { CalendarDay } from '../types'
 import { buildMonthGrid } from '../utils/grid'
 import { DayCell } from './DayCell'
@@ -31,6 +32,7 @@ export function MonthView({
 }: MonthViewProps) {
   const { settings } = useSettings()
   const { ensureYear, getForDate } = useHolidayContext()
+  const { ensureMonth, getForDate: getDiaryForDate } = useDiaryContext()
   const grid = useMemo(() => buildMonthGrid(date.year, date.month, today), [date.month, date.year, today])
 
   // Leading/trailing cells can belong to the neighbouring year.
@@ -39,6 +41,15 @@ export function MonthView({
     ensureYear(date.year - 1)
     ensureYear(date.year + 1)
   }, [date.year, ensureYear])
+
+  // Leading/trailing cells can also belong to the neighbouring month.
+  useEffect(() => {
+    const prev = date.month === 1 ? { year: date.year - 1, month: 12 } : { year: date.year, month: date.month - 1 }
+    const next = date.month === 12 ? { year: date.year + 1, month: 1 } : { year: date.year, month: date.month + 1 }
+    ensureMonth(date.year, date.month)
+    ensureMonth(prev.year, prev.month)
+    ensureMonth(next.year, next.month)
+  }, [date.year, date.month, ensureMonth])
 
   const swipe = useSwipe({ onSwipeLeft: onSwipeNext, onSwipeRight: onSwipePrevious })
   const handleSelect = (day: CalendarDay) => onSelect(day.date)
@@ -65,6 +76,7 @@ export function MonthView({
             key={day.key}
             day={day}
             holidays={getForDate(day.date)}
+            hasDiary={Boolean(getDiaryForDate(toKey(day.date)))}
             isSelected={isSameDate(day.date, selected)}
             showLunar={settings.showLunarInGrid}
             onSelect={handleSelect}

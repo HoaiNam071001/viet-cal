@@ -1,3 +1,4 @@
+import { APP_NAME } from '@/app/config/app.config'
 import { formatLunarTraditional, getLunarDayInfo } from '@/features/lunar'
 import type { CivilDate } from '@/shared/types'
 import { formatDateVN, getWeekdayLabel } from '@/shared/utils/date'
@@ -82,7 +83,7 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
 
   ctx.fillStyle = '#9aa8a0'
   ctx.font = font(30)
-  ctx.fillText('Lịch Việt · Dương lịch & Âm lịch', centerX, HEIGHT - 130)
+  ctx.fillText(`${APP_NAME} · Dương lịch & Âm lịch`, centerX, HEIGHT - 130)
 
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
 }

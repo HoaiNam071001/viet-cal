@@ -7,6 +7,7 @@ import type { CalendarDay } from '../types'
 interface DayCellProps {
   day: CalendarDay
   holidays: Holiday[]
+  hasDiary?: boolean
   isSelected: boolean
   showLunar: boolean
   onSelect: (day: CalendarDay) => void
@@ -19,6 +20,7 @@ interface DayCellProps {
 export const DayCell = memo(function DayCell({
   day,
   holidays,
+  hasDiary,
   isSelected,
   showLunar,
   onSelect,
@@ -64,6 +66,13 @@ export const DayCell = memo(function DayCell({
         >
           {lunarLabel}
         </span>
+      ) : null}
+
+      {hasDiary ? (
+        <span
+          aria-hidden="true"
+          className={cn('absolute top-1.5 right-1.5 size-[5px] rounded-full', isToday ? 'bg-primary-fg/70' : 'bg-accent')}
+        />
       ) : null}
 
       {hasHoliday ? (

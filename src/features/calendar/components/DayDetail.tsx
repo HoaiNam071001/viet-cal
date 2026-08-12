@@ -1,6 +1,7 @@
-import { CalendarHeart, Clock, Moon, PartyPopper, Sparkles } from 'lucide-react'
+import { BookHeart, CalendarHeart, Clock, Moon, PartyPopper, Sparkles } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useSettings } from '@/app/providers/SettingsProvider'
+import { DiaryDaySection } from '@/features/diary/components/DiaryDaySection'
 import { HolidayItem } from '@/features/holidays/components/HolidayItem'
 import { useHolidaysOfDate } from '@/features/holidays/hooks/useHolidays'
 import { formatLunarTraditional, getAuspiciousHours, useLunarDate } from '@/features/lunar'
@@ -63,6 +64,10 @@ export function DayDetail({ date, className }: DayDetailProps) {
         </div>
         <ShareDayButton date={date} />
       </header>
+
+      <Section icon={<BookHeart className="size-3.5" />} title="Nhật ký">
+        <DiaryDaySection date={date} />
+      </Section>
 
       <Section icon={<Moon className="size-3.5" />} title="Can chi">
         <div className="grid grid-cols-3 gap-2">

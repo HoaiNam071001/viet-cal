@@ -1,7 +1,8 @@
 import { Moon, Search, Sun } from 'lucide-react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { APP_NAME } from '@/app/config/app.config'
-import { isNavItemActive, NAV_ITEMS } from '@/app/config/navigation'
+import { getNavItems, isNavItemActive } from '@/app/config/navigation'
+import { useAuth } from '@/app/providers/AuthProvider'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { SearchDialog } from '@/features/search/components/SearchDialog'
 import { Button } from '@/shared/components/ui/Button'
@@ -12,9 +13,11 @@ import { useEffect, useState } from 'react'
 
 export function AppHeader() {
   const { resolved, toggle } = useTheme()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [searchOpen, setSearchOpen] = useState(false)
+  const navItems = getNavItems(Boolean(user))
 
   const goToDate = (date: CivilDate) => navigate(`/calendar/day?date=${toKey(date)}`)
 
@@ -39,7 +42,7 @@ export function AppHeader() {
           </NavLink>
 
           <nav className="ml-4 hidden items-center gap-1 lg:flex">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}

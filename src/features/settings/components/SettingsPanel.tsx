@@ -1,7 +1,11 @@
-import { Monitor, Moon, Sun } from 'lucide-react'
+import { BookHeart, Monitor, Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { useSettings, type Settings } from '@/app/providers/SettingsProvider'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
+import { useAuth } from '@/app/providers/AuthProvider'
+import { AccountCard } from '@/features/auth/components/AccountCard'
+import { CategoryManager } from '@/features/diary/components/CategoryManager'
+import { DataExportCard } from '@/features/diary/components/DataExportCard'
 import { Card, CardHeader } from '@/shared/components/ui/Card'
 import { Segmented } from '@/shared/components/ui/Segmented'
 import type { ThemeMode } from '@/shared/types'
@@ -35,9 +39,25 @@ export function SettingsPanel({ className }: { className?: string }) {
   const { mode, setMode } = useTheme()
   const { settings, update } = useSettings()
   const { usedRemote, isLoading } = useHolidayContext()
+  const { user } = useAuth()
 
   return (
     <div className={cn('flex flex-col gap-4', className)}>
+      <AccountCard />
+
+      {user ? (
+        <>
+          <Card>
+            <CardHeader title="Danh mục nhật ký" icon={<BookHeart className="size-3.5" />} />
+            <div className="px-5 pt-1 pb-5">
+              <CategoryManager />
+            </div>
+          </Card>
+
+          <DataExportCard />
+        </>
+      ) : null}
+
       <Card>
         <CardHeader title="Giao diện" icon={<Sun className="size-3.5" />} />
         <div className="px-5 pt-1 pb-5">
