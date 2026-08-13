@@ -1,7 +1,9 @@
 import { Moon, Search, Sun } from 'lucide-react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { APP_NAME } from '@/app/config/app.config'
 import { getDesktopNavItems, isNavItemActive } from '@/app/config/navigation'
+import { ROUTES } from '@/app/config/routes'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { UserMenu } from '@/features/auth/components/UserMenu'
@@ -13,14 +15,15 @@ import { toKey } from '@/shared/utils/date'
 import { useEffect, useState } from 'react'
 
 export function AppHeader() {
+  const { t } = useTranslation()
   const { resolved, toggle } = useTheme()
   const { user } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [searchOpen, setSearchOpen] = useState(false)
-  const navItems = getDesktopNavItems(Boolean(user))
+  const navItems = getDesktopNavItems(Boolean(user), t)
 
-  const goToDate = (date: CivilDate) => navigate(`/calendar/day?date=${toKey(date)}`)
+  const goToDate = (date: CivilDate) => navigate(ROUTES.calendarDay(toKey(date)))
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -37,7 +40,7 @@ export function AppHeader() {
     <>
       <header className="glass border-border sticky top-0 z-30 border-b">
         <div className="mx-auto flex h-15 max-w-[1240px] items-center gap-3 px-4 sm:px-6">
-          <NavLink to="/" className="flex items-center gap-2.5">
+          <NavLink to={ROUTES.home} className="flex items-center gap-2.5">
             <img src="/logo.svg" alt="" width={36} height={36} className="size-9 rounded-[10px]" />
             <span className="text-text hidden text-[15px] font-semibold sm:block">{APP_NAME}</span>
           </NavLink>
@@ -65,12 +68,12 @@ export function AppHeader() {
               onClick={() => setSearchOpen(true)}
             >
               <Search className="size-4" />
-              <span className="hidden sm:inline">Tìm kiếm</span>
+              <span className="hidden sm:inline">{t('common.search')}</span>
               <kbd className="text-subtle border-border ml-1 hidden rounded-md border px-1.5 py-0.5 text-[10px] lg:inline">
                 ⌘K
               </kbd>
             </Button>
-            <Button variant="ghost" size="icon-sm" onClick={toggle} aria-label="Đổi giao diện sáng/tối">
+            <Button variant="ghost" size="icon-sm" onClick={toggle} aria-label={t('common.toggleTheme')}>
               {resolved === 'dark' ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
             </Button>
             <UserMenu />

@@ -11,7 +11,9 @@ import {
 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { APP_NAME } from '@/app/config/app.config'
+import { ROUTES } from '@/app/config/routes'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { CountdownCard } from '@/features/countdown/components/CountdownCard'
 import { useUpcomingHolidays } from '@/features/holidays/hooks/useHolidays'
@@ -25,68 +27,30 @@ import { toKey } from '@/shared/utils/date'
 import { TodayCard } from '@/widgets/TodayCard'
 import { UpcomingHolidaysCard } from '@/widgets/UpcomingHolidaysCard'
 
-const FEATURES: Array<{ icon: ReactNode; title: string; description: string }> = [
-  {
-    icon: <Moon className="size-5" />,
-    title: 'Âm lịch chuẩn Việt Nam',
-    description: 'Tính theo múi giờ UTC+7, có tháng nhuận, can chi ngày/tháng/năm và 24 tiết khí.',
-  },
-  {
-    icon: <PartyPopper className="size-5" />,
-    title: 'Ngày lễ Việt & quốc tế',
-    description: 'Tết, Giỗ Tổ, Trung Thu… quy đổi động theo từng năm, không hard-code.',
-  },
-  {
-    icon: <Repeat className="size-5" />,
-    title: 'Đổi ngày hai chiều',
-    description: 'Dương ↔ Âm tức thì, hỗ trợ tháng nhuận, sao chép hoặc mở thẳng ngày đó.',
-  },
-  {
-    icon: <Search className="size-5" />,
-    title: 'Tìm kiếm thông minh',
-    description: 'Gõ “15/08/2026”, “rằm tháng 7” hay “Tết 2027” đều ra kết quả.',
-  },
-  {
-    icon: <Share2 className="size-5" />,
-    title: 'Chia sẻ ngày đẹp',
-    description: 'Xuất ngày thành ảnh để gửi bạn bè chỉ với một chạm.',
-  },
-  {
-    icon: <WifiOff className="size-5" />,
-    title: 'Chạy offline',
-    description: 'Cài như ứng dụng, xem lịch và ngày lễ cả khi mất mạng.',
-  },
-]
-
-const SCREENSHOTS = [
-  {
-    light: '/screenshots/month.png',
-    dark: '/screenshots/month-dark.png',
-    label: 'Lịch tháng',
-    caption: 'Ngày Dương và ngày Âm trong cùng một ô',
-  },
-  {
-    light: '/screenshots/day-detail.png',
-    dark: '/screenshots/day-detail-dark.png',
-    label: 'Chi tiết ngày',
-    caption: 'Can chi, tiết khí, giờ hoàng đạo',
-  },
-  {
-    light: '/screenshots/convert.png',
-    dark: '/screenshots/convert-dark.png',
-    label: 'Đổi ngày',
-    caption: 'Dương ↔ Âm, có tháng nhuận',
-  },
-]
-
 export function HomePage() {
+  const { t } = useTranslation()
   const today = useToday()
   const navigate = useNavigate()
   const [nextHoliday] = useUpcomingHolidays(1)
   const { canInstall, needsManualInstructions, install } = useInstallPrompt()
   const { resolved } = useTheme()
 
-  const openDate = (date: CivilDate) => navigate(`/calendar/day?date=${toKey(date)}`)
+  const openDate = (date: CivilDate) => navigate(ROUTES.calendarDay(toKey(date)))
+
+  const FEATURES: Array<{ icon: ReactNode; title: string; description: string }> = [
+    { icon: <Moon className="size-5" />, title: t('home.features.lunar.title'), description: t('home.features.lunar.description') },
+    { icon: <PartyPopper className="size-5" />, title: t('home.features.holidays.title'), description: t('home.features.holidays.description') },
+    { icon: <Repeat className="size-5" />, title: t('home.features.convert.title'), description: t('home.features.convert.description') },
+    { icon: <Search className="size-5" />, title: t('home.features.search.title'), description: t('home.features.search.description') },
+    { icon: <Share2 className="size-5" />, title: t('home.features.share.title'), description: t('home.features.share.description') },
+    { icon: <WifiOff className="size-5" />, title: t('home.features.offline.title'), description: t('home.features.offline.description') },
+  ]
+
+  const SCREENSHOTS = [
+    { light: '/screenshots/month.png', dark: '/screenshots/month-dark.png', label: t('home.screenshots.month.label'), caption: t('home.screenshots.month.caption') },
+    { light: '/screenshots/day-detail.png', dark: '/screenshots/day-detail-dark.png', label: t('home.screenshots.dayDetail.label'), caption: t('home.screenshots.dayDetail.caption') },
+    { light: '/screenshots/convert.png', dark: '/screenshots/convert-dark.png', label: t('home.screenshots.convert.label'), caption: t('home.screenshots.convert.caption') },
+  ]
 
   return (
     <div className="flex flex-col gap-10 pb-6 lg:gap-16">
@@ -95,45 +59,44 @@ export function HomePage() {
         <div>
           <span className="glass-card text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold">
             <Sparkles className="size-3.5" />
-            Lịch Dương · Lịch Âm · Ngày lễ
+            {t('home.badge')}
           </span>
 
           <h1 className="text-text mt-4 text-[34px] leading-[1.1] font-semibold tracking-tight sm:text-5xl">
-            {APP_NAME} — xem ngày Âm Dương
-            <span className="text-primary"> nhanh và chính xác</span>
+            {t('home.heroTitle', { appName: APP_NAME })}
+            <span className="text-primary"> {t('home.heroTitleHighlight')}</span>
           </h1>
 
           <p className="text-muted mt-4 max-w-[52ch] text-[15px] leading-relaxed sm:text-base">
-            Lịch vạn niên cho người Việt: ngày Âm ngay trong lịch tháng, can chi, tiết khí, giờ hoàng
-            đạo, ngày lễ trong nước và quốc tế, đếm ngược tới Tết — hoạt động cả khi ngoại tuyến.
+            {t('home.heroDescription')}
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2.5">
             <Button asChild variant="primary" size="lg">
-              <Link to="/calendar/month">
+              <Link to={ROUTES.calendarMonth}>
                 <CalendarDays className="size-4.5" />
-                Mở lịch tháng
+                {t('home.openCalendar')}
               </Link>
             </Button>
             <Button asChild variant="secondary" size="lg">
-              <Link to="/convert">
+              <Link to={ROUTES.convert}>
                 <Repeat className="size-4.5" />
-                Đổi ngày Âm — Dương
+                {t('home.convertDates')}
               </Link>
             </Button>
             {canInstall && !needsManualInstructions ? (
               <Button variant="outline" size="lg" onClick={install}>
                 <Download className="size-4.5" />
-                Cài ứng dụng
+                {t('home.installApp')}
               </Button>
             ) : null}
           </div>
 
           <dl className="text-muted mt-7 grid max-w-md grid-cols-3 gap-3 text-center">
             {[
-              ['1900 — 2100', 'năm tra cứu'],
-              ['24', 'tiết khí'],
-              ['60', 'can chi'],
+              ['1900 — 2100', t('home.stats.years')],
+              ['24', t('home.stats.solarTerms')],
+              ['60', t('home.stats.canChi')],
             ].map(([value, label]) => (
               <div key={label} className="glass-card rounded-2xl px-2 py-3">
                 <dt className="text-text text-lg font-semibold tabular-nums">{value}</dt>
@@ -151,7 +114,7 @@ export function HomePage() {
 
       {/* ----------------------------- Features ----------------------------- */}
       <section>
-        <SectionHeading title="Có gì trong ứng dụng" subtitle="Đủ dùng hằng ngày, không rườm rà." />
+        <SectionHeading title={t('home.features.title')} subtitle={t('home.features.subtitle')} />
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((feature) => (
             <Card key={feature.title} variant="glass" className="p-5">
@@ -167,13 +130,15 @@ export function HomePage() {
 
       {/* ---------------------------- Screenshots --------------------------- */}
       <section>
-        <SectionHeading
-          title="Giao diện"
-          subtitle="Thiết kế mobile-first, sáng/tối theo hệ thống."
-        />
+        <SectionHeading title={t('home.screenshots.title')} subtitle={t('home.screenshots.subtitle')} />
         <div className="grid gap-4 sm:grid-cols-3">
           {SCREENSHOTS.map((shot) => (
-            <ScreenshotFrame key={shot.light} src={resolved === 'dark' ? shot.dark : shot.light} {...shot} />
+            <ScreenshotFrame
+              key={shot.light}
+              src={resolved === 'dark' ? shot.dark : shot.light}
+              label={shot.label}
+              caption={shot.caption}
+            />
           ))}
         </div>
       </section>
@@ -182,37 +147,34 @@ export function HomePage() {
       <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div>
           <SectionHeading
-            title={`Sắp tới trong năm ${today.year}`}
-            subtitle="Chạm vào một ngày lễ để mở chi tiết ngày đó."
+            title={t('home.upcoming.title', { year: today.year })}
+            subtitle={t('home.upcoming.subtitle')}
           />
           <UpcomingHolidaysCard count={6} onSelect={openDate} />
         </div>
 
         <Card variant="tinted" className="flex flex-col justify-between gap-4 p-6">
           <div>
-            <h3 className="text-text text-lg font-semibold">Cài vào màn hình chính</h3>
+            <h3 className="text-text text-lg font-semibold">{t('home.install.title')}</h3>
             <p className="text-muted mt-1.5 text-sm leading-relaxed">
-              {APP_NAME} là ứng dụng web (PWA): cài xong mở nhanh như app, không cần cửa hàng ứng
-              dụng và vẫn xem được lịch khi không có mạng.
+              {t('home.install.description', { appName: APP_NAME })}
             </p>
           </div>
           {needsManualInstructions ? (
             <p className="text-muted text-sm">
-              Trên iPhone: nhấn <span className="text-text font-medium">Chia sẻ</span> →
-              <span className="text-text font-medium"> Thêm vào MH chính</span>.
+              {t('home.install.iosBefore')} <span className="text-text font-medium">{t('home.install.iosShare')}</span> →
+              <span className="text-text font-medium"> {t('home.install.iosAdd')}</span>
             </p>
           ) : (
             <Button variant="primary" onClick={install} disabled={!canInstall} className="w-full sm:w-auto">
               <Download className="size-4" />
-              {canInstall ? 'Cài ứng dụng' : 'Đã cài hoặc trình duyệt không hỗ trợ'}
+              {canInstall ? t('home.installApp') : t('home.install.alreadyInstalled')}
             </Button>
           )}
         </Card>
       </section>
 
-      <p className="text-subtle text-center text-xs">
-        Âm lịch tính theo múi giờ Asia/Ho_Chi_Minh (UTC+7) ngay trên thiết bị của bạn.
-      </p>
+      <p className="text-subtle text-center text-xs">{t('home.footer')}</p>
     </div>
   )
 }
@@ -228,6 +190,7 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle?: string 
 
 /** Shows a screenshot, or a labelled placeholder while the image is missing. */
 function ScreenshotFrame({ src, label, caption }: { src: string; label: string; caption: string }) {
+  const { t } = useTranslation()
   const [failed, setFailed] = useState(false)
 
   return (
@@ -239,12 +202,12 @@ function ScreenshotFrame({ src, label, caption }: { src: string; label: string; 
       >
         {failed ? (
           <div className="text-subtle absolute inset-0 grid place-items-center text-xs">
-            Ảnh {label.toLowerCase()}
+            {t('home.screenshots.placeholder', { label: label.toLowerCase() })}
           </div>
         ) : (
           <img
             src={src}
-            alt={`Ảnh chụp màn hình: ${label}`}
+            alt={t('home.screenshots.alt', { label })}
             loading="lazy"
             onError={() => setFailed(true)}
             className="absolute inset-0 size-full object-cover object-top"

@@ -1,12 +1,13 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MAX_YEAR, MIN_YEAR } from '@/app/config/app.config'
 import { getYearCanChi } from '@/features/lunar'
 import { Button } from '@/shared/components/ui/Button'
 import { Sheet } from '@/shared/components/ui/Sheet'
 import type { CivilDate } from '@/shared/types'
 import { cn } from '@/shared/utils/cn'
-import { civil, daysInMonth } from '@/shared/utils/date'
+import { civil, daysInMonth, getMonthNames } from '@/shared/utils/date'
 
 interface MonthYearPickerProps {
   open: boolean
@@ -17,6 +18,7 @@ interface MonthYearPickerProps {
 
 /** Month + year chooser opened by tapping the calendar title. */
 export function MonthYearPicker({ open, onClose, date, onPick }: MonthYearPickerProps) {
+  const { t } = useTranslation()
   const [year, setYear] = useState(date.year)
 
   useEffect(() => {
@@ -29,12 +31,12 @@ export function MonthYearPicker({ open, onClose, date, onPick }: MonthYearPicker
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title="Chọn tháng" desktopVariant="dialog">
+    <Sheet open={open} onClose={onClose} title={t('calendar.pickMonth')} desktopVariant="dialog">
       <div className="mb-5 flex items-center justify-between">
         <Button
           variant="ghost"
           size="icon"
-          aria-label="Năm trước"
+          aria-label={t('calendar.previousYear')}
           disabled={year <= MIN_YEAR}
           onClick={() => setYear((y) => y - 1)}
         >
@@ -47,7 +49,7 @@ export function MonthYearPicker({ open, onClose, date, onPick }: MonthYearPicker
         <Button
           variant="ghost"
           size="icon"
-          aria-label="Năm sau"
+          aria-label={t('calendar.nextYear')}
           disabled={year >= MAX_YEAR}
           onClick={() => setYear((y) => y + 1)}
         >
@@ -70,7 +72,7 @@ export function MonthYearPicker({ open, onClose, date, onPick }: MonthYearPicker
                   : 'bg-surface-2 text-text hover:bg-surface-3',
               )}
             >
-              Tháng {month}
+              {getMonthNames()[month - 1]}
             </button>
           )
         })}

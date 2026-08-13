@@ -8,12 +8,15 @@ export interface Settings {
   showInternationalHolidays: boolean
   /** Show tiết khí and giờ hoàng đạo in the day detail. */
   showAstrology: boolean
+  /** Show the content excerpt under each diary entry's title in the diary list. */
+  showDiaryContentPreview: boolean
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   showLunarInGrid: true,
   showInternationalHolidays: true,
   showAstrology: true,
+  showDiaryContentPreview: true,
 }
 
 interface SettingsContextValue {

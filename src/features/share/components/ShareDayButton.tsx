@@ -1,5 +1,6 @@
 import { Check, Share2 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { APP_NAME } from '@/app/config/app.config'
 import { useHolidaysOfDate } from '@/features/holidays/hooks/useHolidays'
 import { Button } from '@/shared/components/ui/Button'
@@ -12,6 +13,7 @@ import { renderDayCard } from '../utils/render-day-card'
  * sharing files, otherwise a plain download.
  */
 export function ShareDayButton({ date }: { date: CivilDate }) {
+  const { t } = useTranslation()
   const holidays = useHolidaysOfDate(date)
   const [state, setState] = useState<'idle' | 'working' | 'done'>('idle')
 
@@ -21,7 +23,7 @@ export function ShareDayButton({ date }: { date: CivilDate }) {
       const blob = await renderDayCard(date, holidays[0]?.name)
       if (!blob) return
 
-      const file = new File([blob], `lich-viet-${toKey(date)}.png`, { type: 'image/png' })
+      const file = new File([blob], `diary-calendar-${toKey(date)}.png`, { type: 'image/png' })
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: APP_NAME })
       } else {
@@ -46,8 +48,8 @@ export function ShareDayButton({ date }: { date: CivilDate }) {
       size="icon-sm"
       onClick={share}
       disabled={state === 'working'}
-      aria-label="Chia sẻ ngày này"
-      title="Chia sẻ ngày này"
+      aria-label={t('share.shareThisDay')}
+      title={t('share.shareThisDay')}
     >
       {state === 'done' ? <Check className="size-4" /> : <Share2 className="size-4" />}
     </Button>

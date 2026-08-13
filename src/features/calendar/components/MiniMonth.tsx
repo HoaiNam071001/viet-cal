@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
 import type { CivilDate } from '@/shared/types'
 import { cn } from '@/shared/utils/cn'
-import { isSameDate } from '@/shared/utils/date'
+import { getMonthNames, getWeekdayShortLabels, isSameDate } from '@/shared/utils/date'
 import { buildMonthGrid } from '../utils/grid'
 
 interface MiniMonthProps {
@@ -17,8 +18,6 @@ interface MiniMonthProps {
   className?: string
 }
 
-const WEEKDAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
-
 /** Compact month grid shared by the year view and the sidebar widget. */
 export function MiniMonth({
   year,
@@ -30,6 +29,7 @@ export function MiniMonth({
   showTitle = true,
   className,
 }: MiniMonthProps) {
+  useTranslation()
   const { getForDate } = useHolidayContext()
   const grid = useMemo(() => buildMonthGrid(year, month, today), [month, today, year])
 
@@ -41,12 +41,12 @@ export function MiniMonth({
           onClick={() => onSelectMonth?.({ year, month, day: 1 })}
           className="text-text hover:text-primary mb-2 w-full text-left text-sm font-semibold transition-colors"
         >
-          Tháng {month}
+          {getMonthNames()[month - 1]}
         </button>
       ) : null}
 
       <div className="grid grid-cols-7 gap-y-0.5">
-        {WEEKDAYS.map((label, index) => (
+        {getWeekdayShortLabels().map((label, index) => (
           <div
             key={label}
             className={cn(

@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { useState, type KeyboardEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface TagInputProps {
   tags: string[]
@@ -9,6 +10,7 @@ interface TagInputProps {
 }
 
 export function TagInput({ tags, onChange, suggestions = [] }: TagInputProps) {
+  const { t } = useTranslation()
   const [draft, setDraft] = useState('')
 
   const commit = () => {
@@ -34,7 +36,7 @@ export function TagInput({ tags, onChange, suggestions = [] }: TagInputProps) {
         {tags.map((tag) => (
           <span key={tag} className="bg-surface-3 text-text flex items-center gap-1 rounded-lg px-2 py-1 text-xs">
             #{tag}
-            <button type="button" onClick={() => onChange(tags.filter((t) => t !== tag))} aria-label={`Xoá thẻ ${tag}`}>
+            <button type="button" onClick={() => onChange(tags.filter((t) => t !== tag))} aria-label={t('diary.removeTag', { tag })}>
               <X className="size-3" />
             </button>
           </span>
@@ -44,7 +46,7 @@ export function TagInput({ tags, onChange, suggestions = [] }: TagInputProps) {
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={onKeyDown}
           onBlur={commit}
-          placeholder={tags.length ? '' : 'Thêm thẻ…'}
+          placeholder={tags.length ? '' : t('diary.addTagPlaceholder')}
           className="text-text min-w-20 flex-1 bg-transparent px-1 py-1 text-xs outline-none"
         />
       </div>

@@ -1,5 +1,6 @@
 import { CalendarDays, Moon, PartyPopper, Search } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { EmptyState } from '@/shared/components/ui/EmptyState'
 import { Sheet } from '@/shared/components/ui/Sheet'
 import type { CivilDate } from '@/shared/types'
@@ -21,6 +22,7 @@ const ICONS: Record<SearchResult['kind'], ReactNode> = {
 }
 
 export function SearchDialog({ open, onClose, onSelect }: SearchDialogProps) {
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const results = useSearch(query)
@@ -40,14 +42,14 @@ export function SearchDialog({ open, onClose, onSelect }: SearchDialogProps) {
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title="Tìm kiếm" desktopVariant="dialog">
+    <Sheet open={open} onClose={onClose} title={t('search.title')} desktopVariant="dialog">
       <div className="bg-surface-2 border-border focus-within:border-primary mb-4 flex items-center gap-2.5 rounded-2xl border px-3.5 transition-colors">
         <Search className="text-subtle size-4.5 shrink-0" />
         <input
           ref={inputRef}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Ngày, ngày lễ, rằm tháng…"
+          placeholder={t('search.placeholder')}
           className="text-text placeholder:text-subtle h-12 flex-1 bg-transparent text-[15px] outline-none"
         />
       </div>
@@ -56,12 +58,12 @@ export function SearchDialog({ open, onClose, onSelect }: SearchDialogProps) {
         query.trim() ? (
           <EmptyState
             icon={<Search className="size-6" />}
-            title="Không tìm thấy"
-            description="Thử nhập ngày dạng 15/08/2026 hoặc tên ngày lễ."
+            title={t('search.notFoundTitle')}
+            description={t('search.notFoundDescription')}
           />
         ) : (
           <div>
-            <p className="text-subtle mb-2 text-xs">Gợi ý</p>
+            <p className="text-subtle mb-2 text-xs">{t('search.suggestions')}</p>
             <div className="flex flex-wrap gap-2">
               {EXAMPLES.map((example) => (
                 <button
@@ -78,8 +80,8 @@ export function SearchDialog({ open, onClose, onSelect }: SearchDialogProps) {
         )
       ) : (
         <div className="flex flex-col gap-4">
-          <ResultGroup title="Ngày" results={results.dates} onSelect={choose} />
-          <ResultGroup title="Ngày lễ" results={results.holidays} onSelect={choose} />
+          <ResultGroup title={t('search.dates')} results={results.dates} onSelect={choose} />
+          <ResultGroup title={t('search.holidays')} results={results.holidays} onSelect={choose} />
         </div>
       )}
     </Sheet>

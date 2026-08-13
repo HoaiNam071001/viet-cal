@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ROUTES } from '@/app/config/routes'
 import { buildTemplateContent, type DiaryTemplateDef } from '@/features/diary/constants/templates'
 import { DiaryEditor } from '@/features/diary/components/DiaryEditor'
 import { TemplatePicker } from '@/features/diary/components/TemplatePicker'
@@ -10,6 +12,7 @@ import { useToday } from '@/shared/hooks/useToday'
 import { formatDateVN, fromKey } from '@/shared/utils/date'
 
 export function DiaryEditorPage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -26,13 +29,13 @@ export function DiaryEditorPage() {
       .finally(() => setIsLoading(false))
   }, [id])
 
-  if (isLoading) return <p className="text-subtle py-10 text-center text-sm">Đang tải…</p>
+  if (isLoading) return <p className="text-subtle py-10 text-center text-sm">{t('common.loading')}</p>
   if (id && !entry) {
     return (
       <EmptyState
         className="py-10"
-        title="Không tìm thấy nhật ký"
-        description="Nhật ký này có thể đã bị xoá."
+        title={t('diary.notFound')}
+        description={t('diary.notFoundDescription')}
       />
     )
   }
@@ -41,12 +44,12 @@ export function DiaryEditorPage() {
 
   return (
     <div className="mx-auto max-w-xl">
-      <h1 className="text-text mb-1 text-xl font-semibold">{entry ? 'Sửa nhật ký' : 'Viết nhật ký'}</h1>
+      <h1 className="text-text mb-1 text-xl font-semibold">{entry ? t('diary.editEntry') : t('diary.writeEntry')}</h1>
       <p className="text-muted mb-5 text-sm">{formatDateVN(date)}</p>
 
       {!entry ? (
         <div className="mb-5">
-          <p className="text-subtle mb-2 text-[11px] font-semibold tracking-[0.14em] uppercase">Bắt đầu nhanh</p>
+          <p className="text-subtle mb-2 text-[11px] font-semibold tracking-[0.14em] uppercase">{t('diary.quickStart')}</p>
           <TemplatePicker onPick={setTemplate} />
         </div>
       ) : null}
@@ -57,9 +60,10 @@ export function DiaryEditorPage() {
         entry={entry ?? undefined}
         initialContent={template ? buildTemplateContent(template) : undefined}
         initialMoodEmoji={template?.defaultMoodEmoji}
-        onSaved={(saved) => navigate(`/diary/${saved.id}`, { replace: true })}
+        titleSuggestions={template?.titleSuggestions}
+        onSaved={(saved) => navigate(ROUTES.diaryEntry(saved.id), { replace: true })}
         onCancel={() => navigate(-1)}
-        onDeleted={() => navigate('/diary')}
+        onDeleted={() => navigate(ROUTES.diary)}
       />
     </div>
   )

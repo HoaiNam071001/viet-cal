@@ -1,5 +1,6 @@
 import { BookHeart, Clock, Moon, PartyPopper, Sparkles } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSettings } from '@/app/providers/SettingsProvider'
 import { DiaryDaySection } from '@/features/diary/components/DiaryDaySection'
 import { HolidayItem } from '@/features/holidays/components/HolidayItem'
@@ -38,6 +39,7 @@ function Section({
 
 /** The full picture of a single day — reused by the day view and the side panel. */
 export function DayDetail({ date, className }: DayDetailProps) {
+  const { t } = useTranslation()
   const { settings } = useSettings()
   const info = useLunarDate(date)
   const holidays = useHolidaysOfDate(date)
@@ -57,12 +59,12 @@ export function DayDetail({ date, className }: DayDetailProps) {
           <p className="text-accent mt-2.5 text-[15px] font-medium">
             {formatLunarTraditional(info.lunar)}
           </p>
-          <p className="text-subtle text-xs">năm {info.sexagenary.year.name}</p>
+          <p className="text-subtle text-xs">{t('converter.yearOf', { name: info.sexagenary.year.name })}</p>
         </div>
         <ShareDayButton date={date} />
       </header>
 
-      <Section icon={<BookHeart className="size-3.5" />} title="Nhật ký">
+      <Section icon={<BookHeart className="size-3.5" />} title={t('nav.diary')}>
         <DiaryDaySection date={date} />
       </Section>
 
@@ -70,9 +72,9 @@ export function DayDetail({ date, className }: DayDetailProps) {
         <div className="grid grid-cols-3 gap-2">
           {(
             [
-              ['Ngày', info.sexagenary.day.name],
-              ['Tháng', info.sexagenary.month.name],
-              ['Năm', info.sexagenary.year.name],
+              [t('calendar.canChiLabels.day'), info.sexagenary.day.name],
+              [t('calendar.canChiLabels.month'), info.sexagenary.month.name],
+              [t('calendar.canChiLabels.year'), info.sexagenary.year.name],
             ] as const
           ).map(([label, value]) => (
             <div key={label} className="bg-surface-2 rounded-2xl px-3 py-2.5 text-center">
@@ -88,15 +90,15 @@ export function DayDetail({ date, className }: DayDetailProps) {
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="accent">{info.solarTerm.name}</Badge>
             {info.solarTermStart ? (
-              <span className="text-muted text-xs">Bắt đầu tiết khí hôm nay</span>
+              <span className="text-muted text-xs">{t('calendar.solarTermStartsToday')}</span>
             ) : null}
-            {info.isFullMoon ? <Badge tone="neutral">Rằm</Badge> : null}
-            {info.isNewMoon ? <Badge tone="neutral">Mùng một</Badge> : null}
+            {info.isFullMoon ? <Badge tone="neutral">{t('calendar.fullMoon')}</Badge> : null}
+            {info.isNewMoon ? <Badge tone="neutral">{t('calendar.newMoon')}</Badge> : null}
           </div>
         </Section>
       ) : null}
 
-      <Section icon={<PartyPopper className="size-3.5" />} title="Ngày lễ">
+      <Section icon={<PartyPopper className="size-3.5" />} title={t('nav.holidays')}>
         {holidays.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {holidays.map((holiday) => (
@@ -104,7 +106,7 @@ export function DayDetail({ date, className }: DayDetailProps) {
             ))}
           </ul>
         ) : (
-          <p className="text-subtle text-sm">Không có ngày lễ.</p>
+          <p className="text-subtle text-sm">{t('calendar.noHolidays')}</p>
         )}
       </Section>
 

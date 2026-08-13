@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Lịch Việt — a mobile-first PWA calendar app for Vietnamese users: solar/lunar calendar views, public
-holidays, can-chi (sexagenary cycle), solar terms (tiết khí), solar↔lunar date conversion, holiday
-countdowns, sharing a date as an image, and offline support.
+Diary Calendar (formerly "Lịch Việt") — a mobile-first PWA calendar app for Vietnamese users: solar/lunar
+calendar views, public holidays, can-chi (sexagenary cycle), solar terms (tiết khí), solar↔lunar date
+conversion, holiday countdowns, sharing a date as an image, a personal diary, and offline support.
 
 ## Commands
 
@@ -87,6 +87,22 @@ rules still cover the data. UI code never calls the API directly — always go t
 `features/calendar/types/event.ts` + `hooks/useEvents.ts` are the intended plug-in point: Day View and
 Day Detail already render from `useEventsForDate`, so adding a real event source only requires
 swapping the data layer behind that hook.
+
+### Internationalization (`app/i18n`)
+
+`react-i18next` drives all UI chrome (labels, buttons, headings, empty states, settings). Vietnamese
+(`vi`, default) and English (`en`) resources live as flat-ish nested JSON in `app/i18n/locales/{vi,en}.json`
+under one `translation` namespace; the language switcher is in Settings and persists to `localStorage`
+(`STORAGE_KEYS.language`). Components call `useTranslation()`; plain (non-component) utilities that need
+translated strings — `shared/utils/date.ts`, `features/countdown/utils/countdown.ts`,
+`features/share/utils/render-day-card.ts` — import the `i18n` singleton directly and call `i18n.t(...)`.
+
+Calendar-specific *domain* terms are deliberately left untranslated in both languages: holiday names
+(`features/holidays/constants`), can-chi/solar-term output (`features/lunar`), and diary quick-start
+template content (`features/diary/constants/templates.ts`) always render in Vietnamese, the same way an
+English app keeps loanwords like "Diwali" untranslated. The free-text search box
+(`features/search/utils/parse-query.ts`) also only understands Vietnamese queries — translating its UI
+chrome doesn't extend to parsing English input.
 
 ### Styling / theming
 

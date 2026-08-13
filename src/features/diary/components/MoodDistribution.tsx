@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import { EmptyState } from '@/shared/components/ui/EmptyState'
 import type { DiaryStats } from '../hooks/useDiaryStats'
 
 export function MoodDistribution({ moodCounts }: { moodCounts: DiaryStats['moodCounts'] }) {
+  const { t } = useTranslation()
   if (moodCounts.length === 0) {
-    return <EmptyState className="py-6" title="Chưa có dữ liệu cảm xúc" />
+    return <EmptyState className="py-6" title={t('diary.noMoodData')} />
   }
 
   const max = moodCounts[0].count

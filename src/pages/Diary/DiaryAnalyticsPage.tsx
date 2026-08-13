@@ -1,5 +1,7 @@
 import { ChevronLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ROUTES } from '@/app/config/routes'
 import { DiaryHeatmap } from '@/features/diary/components/DiaryHeatmap'
 import { MoodDistribution } from '@/features/diary/components/MoodDistribution'
 import { StatsCard } from '@/features/diary/components/StatsCard'
@@ -8,30 +10,31 @@ import { Button } from '@/shared/components/ui/Button'
 import { Card, CardHeader } from '@/shared/components/ui/Card'
 
 export function DiaryAnalyticsPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const stats = useDiaryStats()
 
   return (
     <div className="mx-auto max-w-xl lg:max-w-3xl">
-      <Button variant="ghost" size="sm" onClick={() => navigate('/diary')} className="mb-3 -ml-2 gap-1.5">
+      <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.diary)} className="mb-3 -ml-2 gap-1.5">
         <ChevronLeft className="size-4" />
-        Nhật ký
+        {t('nav.diary')}
       </Button>
 
-      <h1 className="text-text mb-1 text-xl font-semibold">Thống kê</h1>
-      <p className="text-muted mb-5 text-sm">3 tháng gần nhất.</p>
+      <h1 className="text-text mb-1 text-xl font-semibold">{t('diary.statsTitle')}</h1>
+      <p className="text-muted mb-5 text-sm">{t('diary.statsSubtitle')}</p>
 
       <div className="flex flex-col gap-4">
         <StatsCard stats={stats} />
 
         <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start">
           <Card className="p-5">
-            <CardHeader title="Hoạt động 12 tuần" className="px-0 pt-0" />
+            <CardHeader title={t('diary.activity12Weeks')} className="px-0 pt-0" />
             <DiaryHeatmap heatmap={stats.heatmap} />
           </Card>
 
           <Card className="p-5">
-            <CardHeader title="Cảm xúc" className="px-0 pt-0" />
+            <CardHeader title={t('diary.mood')} className="px-0 pt-0" />
             <MoodDistribution moodCounts={stats.moodCounts} />
           </Card>
         </div>

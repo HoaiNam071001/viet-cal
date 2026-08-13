@@ -1,4 +1,5 @@
 import { Timer } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { UpcomingHoliday } from '@/features/holidays/hooks/useHolidays'
 import { Card, CardHeader } from '@/shared/components/ui/Card'
 import { cn } from '@/shared/utils/cn'
@@ -13,6 +14,7 @@ interface CountdownCardProps {
 
 /** Hero countdown to a single upcoming holiday. */
 export function CountdownCard({ item, onSelect, className }: CountdownCardProps) {
+  const { t } = useTranslation()
   const { holiday, date, daysUntil } = item
   const long = formatCountdownLong(daysUntil)
 
@@ -26,12 +28,12 @@ export function CountdownCard({ item, onSelect, className }: CountdownCardProps)
       )}
       onClick={onSelect ? () => onSelect(item) : undefined}
     >
-      <CardHeader title="Đếm ngược" icon={<Timer className="size-3.5" />} />
+      <CardHeader title={t('countdown.title')} icon={<Timer className="size-3.5" />} />
       <div className="px-5 pt-1 pb-5">
         <p className="text-text text-[15px] font-semibold">{holiday.name}</p>
         <p className="text-muted mt-0.5 text-xs">
           {formatNumericVN(date)}
-          {holiday.lunar ? ` · ${holiday.lunar.day}/${holiday.lunar.month} ÂL` : ''}
+          {holiday.lunar ? ` · ${holiday.lunar.day}/${holiday.lunar.month} ${t('converter.lunarAbbr')}` : ''}
         </p>
         <p className="text-primary mt-3 text-3xl leading-none font-semibold">
           {formatCountdown(daysUntil)}

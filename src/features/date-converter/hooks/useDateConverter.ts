@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   formatLunarDayMonth,
   getDayCanChi,
@@ -26,6 +27,7 @@ export interface ConversionResult {
 
 /** Drives the two-way converter; all validation lives here, not in the UI. */
 export function useDateConverter() {
+  const { t } = useTranslation()
   const today = useToday()
   const [direction, setDirection] = useState<ConversionDirection>('solar-to-lunar')
   const [input, setInput] = useState<CivilDate>(today)
@@ -38,17 +40,20 @@ export function useDateConverter() {
   const canBeLeap = leapMonthOfYear === input.month
 
   const result = useMemo<ConversionResult>(() => {
+    const solarAbbr = t('converter.solarAbbr')
+    const lunarAbbr = t('converter.lunarAbbr')
+
     if (direction === 'solar-to-lunar') {
       if (!isValidDate(input)) {
-        return empty('Ngày dương lịch không hợp lệ.')
+        return empty(t('converter.invalidSolarDate'))
       }
       const lunar = solarToLunar(input)
       return {
         solar: input,
         lunar,
-        primaryText: `${lunar.day}/${lunar.month}${lunar.isLeapMonth ? ' (nhuận)' : ''}/${lunar.year}`,
-        secondaryText: `${formatLunarDayMonth(lunar)} năm ${getYearCanChi(lunar.year).name} · Ngày ${getDayCanChi(input).name}`,
-        copyText: `${input.day}/${input.month}/${input.year} (DL) = ${lunar.day}/${lunar.month}/${lunar.year} (ÂL)`,
+        primaryText: `${lunar.day}/${lunar.month}${lunar.isLeapMonth ? t('converter.leapSuffix') : ''}/${lunar.year}`,
+        secondaryText: `${formatLunarDayMonth(lunar)} ${t('converter.yearOf', { name: getYearCanChi(lunar.year).name })} · ${t('converter.canChiDay', { name: getDayCanChi(input).name })}`,
+        copyText: `${input.day}/${input.month}/${input.year} (${solarAbbr}) = ${lunar.day}/${lunar.month}/${lunar.year} (${lunarAbbr})`,
         error: null,
       }
     }
@@ -61,17 +66,17 @@ export function useDateConverter() {
     }
     const solar = lunarToSolar(lunar)
     if (!solar) {
-      return empty('Ngày âm lịch này không tồn tại trong năm đã chọn.')
+      return empty(t('converter.invalidLunarDate'))
     }
     return {
       solar,
       lunar,
       primaryText: `${solar.day}/${solar.month}/${solar.year}`,
-      secondaryText: `${formatFullDateVN(solar)} · Ngày ${getDayCanChi(solar).name}`,
-      copyText: `${lunar.day}/${lunar.month}/${lunar.year} (ÂL) = ${solar.day}/${solar.month}/${solar.year} (DL)`,
+      secondaryText: `${formatFullDateVN(solar)} · ${t('converter.canChiDay', { name: getDayCanChi(solar).name })}`,
+      copyText: `${lunar.day}/${lunar.month}/${lunar.year} (${lunarAbbr}) = ${solar.day}/${solar.month}/${solar.year} (${solarAbbr})`,
       error: null,
     }
-  }, [canBeLeap, direction, input, isLeapMonth])
+  }, [canBeLeap, direction, input, isLeapMonth, t])
 
   return {
     direction,

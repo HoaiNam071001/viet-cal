@@ -1,10 +1,12 @@
+import { useTranslation } from 'react-i18next'
 import type { DiaryStats } from '../hooks/useDiaryStats'
 
 export function StatsCard({ stats }: { stats: DiaryStats }) {
+  const { t } = useTranslation()
   const items: Array<{ value: string; label: string }> = [
-    { value: String(stats.totalEntriesThisMonth), label: 'Nhật ký tháng này' },
-    { value: `🔥 ${stats.streakCurrent}`, label: 'Chuỗi hiện tại' },
-    { value: String(stats.streakLongest), label: 'Chuỗi dài nhất' },
+    { value: String(stats.totalEntriesThisMonth), label: t('diary.entriesThisMonth') },
+    { value: `🔥 ${stats.streakCurrent}`, label: t('diary.currentStreak') },
+    { value: String(stats.streakLongest), label: t('diary.longestStreak') },
   ]
 
   return (

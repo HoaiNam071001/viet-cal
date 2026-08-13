@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
 import { useToday } from '@/shared/hooks/useToday'
 import { diffInDays, fromKey } from '@/shared/utils/date'
@@ -13,6 +14,7 @@ export interface SearchResults {
 
 /** Global search across parsed dates and holiday names for the next few years. */
 export function useSearch(query: string): SearchResults {
+  const { t } = useTranslation()
   const today = useToday()
   const { ensureYear, getForYear } = useHolidayContext()
   const targetYear = extractYear(query)
@@ -52,7 +54,7 @@ export function useSearch(query: string): SearchResults {
             kind: 'holiday',
             title: holiday.name,
             subtitle: holiday.lunar
-              ? `${date.day}/${date.month}/${date.year} · ${holiday.lunar.day}/${holiday.lunar.month} Âm lịch`
+              ? `${date.day}/${date.month}/${date.year} · ${t('holidays.lunarDate', { day: holiday.lunar.day, month: holiday.lunar.month })}`
               : `${date.day}/${date.month}/${date.year}`,
             date,
             // Upcoming first, past last.
@@ -69,5 +71,5 @@ export function useSearch(query: string): SearchResults {
       holidays: holidays.slice(0, 12),
       isEmpty: dates.length === 0 && holidays.length === 0,
     }
-  }, [getForYear, query, targetYear, today])
+  }, [getForYear, query, targetYear, today, t])
 }

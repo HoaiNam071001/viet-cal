@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode, type TouchEvent } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { useBodyScrollLock } from '@/shared/hooks/useBodyScrollLock'
 import { useIsDesktop } from '@/shared/hooks/useMediaQuery'
 import { cn } from '@/shared/utils/cn'
@@ -32,6 +33,7 @@ function useDismissOnEscape(open: boolean, onClose: () => void) {
  * touch/mobile, a slide-over panel (or centred dialog) on desktop.
  */
 export function Sheet({ open, onClose, title, children, desktopVariant = 'panel', className }: SheetProps) {
+  const { t } = useTranslation()
   const isDesktop = useIsDesktop()
   const [dragY, setDragY] = useState(0)
   const dragStart = useRef<number | null>(null)
@@ -67,7 +69,7 @@ export function Sheet({ open, onClose, title, children, desktopVariant = 'panel'
     <div className="fixed inset-0 z-50 flex" role="dialog" aria-modal="true" aria-label={typeof title === 'string' ? title : undefined}>
       <button
         type="button"
-        aria-label="Đóng"
+        aria-label={t('common.close')}
         onClick={onClose}
         className="absolute inset-0 animate-fade-in cursor-default bg-black/35 backdrop-blur-[2px] dark:bg-black/55"
       />
@@ -104,7 +106,7 @@ export function Sheet({ open, onClose, title, children, desktopVariant = 'panel'
           )}
         >
           {title ? <h2 className="text-text text-lg font-semibold">{title}</h2> : <span />}
-          <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Đóng">
+          <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label={t('common.close')}>
             <X className="size-4.5" />
           </Button>
         </div>

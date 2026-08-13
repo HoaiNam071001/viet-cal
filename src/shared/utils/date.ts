@@ -1,3 +1,4 @@
+import i18n from '@/app/i18n'
 import { MAX_YEAR, MIN_YEAR, VN_TIMEZONE } from '@/app/config/app.config'
 import type { CivilDate, DateKey } from '@/shared/types'
 
@@ -155,21 +156,59 @@ export function msUntilNextVietnamDay(at: Date = new Date()): number {
   return 86_400_000 - elapsed
 }
 
-/* ----------------------------- Vietnamese labels ---------------------------- */
+/* ------------------------- Locale-aware date labels ------------------------- */
 
-export const WEEKDAY_LABELS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy']
-export const WEEKDAY_SHORT_MON_FIRST = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+const WEEKDAY_LABELS_VI = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy']
+const WEEKDAY_LABELS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const WEEKDAY_SHORT_MON_FIRST_VI = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+const WEEKDAY_SHORT_MON_FIRST_EN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const MONTH_NAMES_EN = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+const isEnglish = () => i18n.language === 'en'
+
+/** 0 = Sunday … 6 = Saturday, in the current UI language. */
+export function getWeekdayLabels(): string[] {
+  return isEnglish() ? WEEKDAY_LABELS_EN : WEEKDAY_LABELS_VI
+}
+
+/** `Tháng 1` … `Tháng 12` (vi) / `January` … `December` (en). */
+export function getMonthNames(): string[] {
+  return isEnglish() ? MONTH_NAMES_EN : Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`)
+}
+
+/** `Th 8` (vi) / `Aug` (en) — a compact month label for small UI chrome. */
+export function getMonthAbbr(month: number): string {
+  return isEnglish() ? MONTH_NAMES_EN[month - 1].slice(0, 3) : `Th ${month}`
+}
+
+/** Monday-first short weekday labels, in the current UI language. */
+export function getWeekdayShortLabels(): string[] {
+  return isEnglish() ? WEEKDAY_SHORT_MON_FIRST_EN : WEEKDAY_SHORT_MON_FIRST_VI
+}
 
 export function getWeekdayLabel(d: CivilDate): string {
-  return WEEKDAY_LABELS[getDayOfWeek(d)]
+  return getWeekdayLabels()[getDayOfWeek(d)]
 }
 
-/** `11 tháng 8, 2026` */
+/** `11 tháng 8, 2026` (vi) / `August 11, 2026` (en) */
 export function formatDateVN(d: CivilDate): string {
-  return `${d.day} tháng ${d.month}, ${d.year}`
+  return isEnglish() ? `${MONTH_NAMES_EN[d.month - 1]} ${d.day}, ${d.year}` : `${d.day} tháng ${d.month}, ${d.year}`
 }
 
-/** `Thứ ba, 11 tháng 8, 2026` */
+/** `Thứ ba, 11 tháng 8, 2026` (vi) / `Tuesday, August 11, 2026` (en) */
 export function formatFullDateVN(d: CivilDate): string {
   return `${getWeekdayLabel(d)}, ${formatDateVN(d)}`
 }
@@ -179,7 +218,7 @@ export function formatNumericVN(d: CivilDate): string {
   return `${pad(d.day)}/${pad(d.month)}/${d.year}`
 }
 
-/** `Tháng 8, 2026` */
+/** `Tháng 8, 2026` (vi) / `August 2026` (en) */
 export function formatMonthVN(d: CivilDate): string {
-  return `Tháng ${d.month}, ${d.year}`
+  return isEnglish() ? `${MONTH_NAMES_EN[d.month - 1]} ${d.year}` : `Tháng ${d.month}, ${d.year}`
 }

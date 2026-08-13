@@ -1,7 +1,10 @@
-import { BookHeart, ChevronRight, Monitor, Moon, Sun } from 'lucide-react'
+import { BookHeart, ChevronRight, Languages, Monitor, Moon, Sun } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/app/providers/ThemeProvider'
 import { useSettings, type Settings } from '@/app/providers/SettingsProvider'
+import { ROUTES } from '@/app/config/routes'
+import { SUPPORTED_LANGUAGES, type AppLanguage } from '@/app/config/app.config'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { AccountCard } from '@/features/auth/components/AccountCard'
@@ -11,36 +14,31 @@ import { Segmented } from '@/shared/components/ui/Segmented'
 import type { ThemeMode } from '@/shared/types'
 import { cn } from '@/shared/utils/cn'
 
-const THEME_OPTIONS = [
-  { value: 'light' as const, label: 'Sáng' },
-  { value: 'dark' as const, label: 'Tối' },
-  { value: 'system' as const, label: 'Hệ thống' },
-]
-
-const TOGGLES: Array<{ key: keyof Settings; label: string; description: string }> = [
-  {
-    key: 'showLunarInGrid',
-    label: 'Hiện ngày Âm trong lịch tháng',
-    description: 'Số nhỏ bên dưới ngày Dương.',
-  },
-  {
-    key: 'showInternationalHolidays',
-    label: 'Hiện ngày lễ quốc tế',
-    description: 'Valentine, Halloween, Giáng sinh…',
-  },
-  {
-    key: 'showAstrology',
-    label: 'Hiện tiết khí & giờ hoàng đạo',
-    description: 'Thông tin lịch truyền thống trong chi tiết ngày.',
-  },
+const TOGGLE_KEYS: (keyof Settings)[] = [
+  'showLunarInGrid',
+  'showInternationalHolidays',
+  'showAstrology',
+  'showDiaryContentPreview',
 ]
 
 export function SettingsPanel({ className }: { className?: string }) {
+  const { t, i18n } = useTranslation()
   const { mode, setMode } = useTheme()
   const { settings, update } = useSettings()
   const { usedRemote, isLoading } = useHolidayContext()
   const { user } = useAuth()
   const navigate = useNavigate()
+
+  const themeOptions = [
+    { value: 'light' as const, label: t('settings.appearance.light') },
+    { value: 'dark' as const, label: t('settings.appearance.dark') },
+    { value: 'system' as const, label: t('settings.appearance.system') },
+  ]
+
+  const languageOptions = SUPPORTED_LANGUAGES.map((lang) => ({
+    value: lang,
+    label: lang === 'vi' ? t('settings.language.vietnamese') : t('settings.language.english'),
+  }))
 
   return (
     <div className={cn('flex flex-col gap-4', className)}>
@@ -49,14 +47,14 @@ export function SettingsPanel({ className }: { className?: string }) {
       {user ? (
         <>
           <Card>
-            <CardHeader title="Nhật ký" icon={<BookHeart className="size-3.5" />} />
+            <CardHeader title={t('settings.diary.title')} icon={<BookHeart className="size-3.5" />} />
             <div className="px-5 pt-1 pb-5">
               <button
                 type="button"
-                onClick={() => navigate('/diary/categories')}
+                onClick={() => navigate(ROUTES.diaryCategories)}
                 className="bg-surface-2 hover:bg-surface-3 flex w-full items-center justify-between gap-3 rounded-2xl px-3.5 py-3 text-left transition-colors"
               >
-                <span className="text-text text-sm font-medium">Quản lý danh mục</span>
+                <span className="text-text text-sm font-medium">{t('settings.diary.manageCategories')}</span>
                 <ChevronRight className="text-subtle size-4" />
               </button>
             </div>
@@ -67,54 +65,65 @@ export function SettingsPanel({ className }: { className?: string }) {
       ) : null}
 
       <Card>
-        <CardHeader title="Giao diện" icon={<Sun className="size-3.5" />} />
+        <CardHeader title={t('settings.appearance.title')} icon={<Sun className="size-3.5" />} />
         <div className="px-5 pt-1 pb-5">
           <Segmented
             className="flex w-full"
-            options={THEME_OPTIONS}
+            options={themeOptions}
             value={mode}
             onChange={(next: ThemeMode) => setMode(next)}
-            aria-label="Chế độ giao diện"
+            aria-label={t('settings.appearance.title')}
           />
           <div className="text-subtle mt-3 flex items-center gap-2 text-xs">
             {mode === 'system' ? <Monitor className="size-3.5" /> : mode === 'dark' ? <Moon className="size-3.5" /> : <Sun className="size-3.5" />}
-            {mode === 'system' ? 'Theo cài đặt hệ thống của thiết bị.' : 'Luôn dùng chế độ đã chọn.'}
+            {mode === 'system' ? t('settings.appearance.systemNote') : t('settings.appearance.fixedNote')}
           </div>
         </div>
       </Card>
 
       <Card>
-        <CardHeader title="Hiển thị" />
+        <CardHeader title={t('settings.language.title')} icon={<Languages className="size-3.5" />} />
+        <div className="px-5 pt-1 pb-5">
+          <Segmented
+            className="flex w-full"
+            options={languageOptions}
+            value={i18n.language as AppLanguage}
+            onChange={(next: AppLanguage) => i18n.changeLanguage(next)}
+            aria-label={t('settings.language.title')}
+          />
+          <p className="text-subtle mt-3 text-xs">{t('settings.language.note')}</p>
+        </div>
+      </Card>
+
+      <Card>
+        <CardHeader title={t('settings.display.title')} />
         <div className="flex flex-col px-5 pt-1 pb-4">
-          {TOGGLES.map((toggle) => (
+          {TOGGLE_KEYS.map((key) => (
             <label
-              key={toggle.key}
+              key={key}
               className="border-border flex cursor-pointer items-center justify-between gap-4 border-b py-3.5 last:border-b-0"
             >
               <span className="min-w-0">
-                <span className="text-text block text-sm font-medium">{toggle.label}</span>
-                <span className="text-subtle block text-xs">{toggle.description}</span>
+                <span className="text-text block text-sm font-medium">{t(`settings.display.${key}.label`)}</span>
+                <span className="text-subtle block text-xs">{t(`settings.display.${key}.description`)}</span>
               </span>
-              <Switch
-                checked={settings[toggle.key]}
-                onChange={(value) => update(toggle.key, value)}
-                label={toggle.label}
-              />
+              <Switch checked={settings[key]} onChange={(value) => update(key, value)} label={t(`settings.display.${key}.label`)} />
             </label>
           ))}
         </div>
       </Card>
 
       <Card>
-        <CardHeader title="Dữ liệu ngày lễ" />
+        <CardHeader title={t('settings.holidayData.title')} />
         <div className="text-muted px-5 pt-1 pb-5 text-sm">
-          <p>
-            Ngày lễ Âm lịch (Tết, Giỗ Tổ, Trung Thu…) luôn được tính trực tiếp trên máy nên hoạt động
-            cả khi ngoại tuyến.
-          </p>
+          <p>{t('settings.holidayData.description')}</p>
           <p className="text-subtle mt-2 text-xs">
-            Nguồn bổ sung: date.nager.at ·{' '}
-            {isLoading ? 'đang tải…' : usedRemote ? 'đã đồng bộ' : 'đang dùng dữ liệu ngoại tuyến'}
+            {t('settings.holidayData.source')} ·{' '}
+            {isLoading
+              ? t('settings.holidayData.syncing')
+              : usedRemote
+                ? t('settings.holidayData.synced')
+                : t('settings.holidayData.offline')}
           </p>
         </div>
       </Card>

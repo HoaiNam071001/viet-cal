@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { signInWithGoogle } from '@/features/auth/services/auth.service'
 import { toAuthErrorMessage } from '@/features/auth/types/auth'
 import { Button } from '@/shared/components/ui/Button'
 
 export function GoogleSignInButton({ onError }: { onError: (message: string) => void }) {
+  const { t } = useTranslation()
   const [isRedirecting, setIsRedirecting] = useState(false)
 
   const onClick = async () => {
@@ -12,7 +14,7 @@ export function GoogleSignInButton({ onError }: { onError: (message: string) => 
       await signInWithGoogle()
       // Success navigates away to Google — nothing left to do here.
     } catch (err) {
-      onError(toAuthErrorMessage(err))
+      onError(toAuthErrorMessage(err, t))
       setIsRedirecting(false)
     }
   }
@@ -27,7 +29,7 @@ export function GoogleSignInButton({ onError }: { onError: (message: string) => 
       className="w-full gap-2.5"
     >
       <GoogleIcon className="size-4.5" />
-      {isRedirecting ? 'Đang chuyển hướng…' : 'Tiếp tục với Google'}
+      {isRedirecting ? t('auth.redirecting') : t('auth.continueWithGoogle')}
     </Button>
   )
 }

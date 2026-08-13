@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShell } from '@/app/layout/AppShell'
+import { ROUTE_PATTERNS, ROUTES } from '@/app/config/routes'
 import { CalendarPage } from '@/pages/CalendarPage'
 import { HomePage } from '@/pages/HomePage'
 import { ConverterPage } from '@/pages/ConverterPage'
@@ -16,23 +17,23 @@ import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: ROUTES.home,
     element: <AppShell />,
     children: [
       { index: true, element: <HomePage /> },
       // The view is part of the path and the day is a query param, so any
       // screen can be linked to: /calendar/day?date=2026-08-11
       {
-        path: 'calendar/:view',
+        path: ROUTE_PATTERNS.calendarView,
         element: (
           <ProtectedRoute>
             <CalendarPage />
           </ProtectedRoute>
         ),
       },
-      { path: 'calendar', element: <Navigate to="/calendar/month" replace /> },
+      { path: ROUTE_PATTERNS.calendarRedirect, element: <Navigate to={ROUTES.calendarMonth} replace /> },
       {
-        path: 'convert',
+        path: ROUTE_PATTERNS.convert,
         element: (
           <ProtectedRoute>
             <ConverterPage />
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'holidays',
+        path: ROUTE_PATTERNS.holidays,
         element: (
           <ProtectedRoute>
             <HolidaysPage />
@@ -48,17 +49,17 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'settings',
+        path: ROUTE_PATTERNS.settings,
         element: (
           <ProtectedRoute>
             <SettingsPage />
           </ProtectedRoute>
         ),
       },
-      { path: 'auth/login', element: <LoginPage /> },
-      { path: 'auth/signup', element: <SignupPage /> },
+      { path: ROUTE_PATTERNS.authLogin, element: <LoginPage /> },
+      { path: ROUTE_PATTERNS.authSignup, element: <SignupPage /> },
       {
-        path: 'diary',
+        path: ROUTE_PATTERNS.diary,
         element: (
           <ProtectedRoute>
             <DiaryListPage />
@@ -66,7 +67,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'diary/categories',
+        path: ROUTE_PATTERNS.diaryCategories,
         element: (
           <ProtectedRoute>
             <DiaryCategoriesPage />
@@ -74,7 +75,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'diary/new',
+        path: ROUTE_PATTERNS.diaryNew,
         element: (
           <ProtectedRoute>
             <DiaryEditorPage />
@@ -82,7 +83,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'diary/:id',
+        path: ROUTE_PATTERNS.diaryEntry,
         element: (
           <ProtectedRoute>
             <DiaryDetailPage />
@@ -90,7 +91,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'diary/:id/edit',
+        path: ROUTE_PATTERNS.diaryEdit,
         element: (
           <ProtectedRoute>
             <DiaryEditorPage />
@@ -98,14 +99,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'diary/analytics',
+        path: ROUTE_PATTERNS.diaryAnalytics,
         element: (
           <ProtectedRoute>
             <DiaryAnalyticsPage />
           </ProtectedRoute>
         ),
       },
-      { path: '*', element: <Navigate to="/" replace /> },
+      { path: '*', element: <Navigate to={ROUTES.home} replace /> },
     ],
   },
 ])

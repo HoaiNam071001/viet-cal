@@ -1,6 +1,6 @@
 {
-  "name": "Nhật Ký Lịch — Lịch Âm Dương & Nhật Ký",
-  "short_name": "Nhật Ký Lịch",
+  "name": "Diary Calendar — Lịch Âm Dương & Nhật Ký",
+  "short_name": "Diary Calendar",
   "description": "Lịch Dương và Lịch Âm Việt Nam: ngày lễ, can chi, tiết khí, đổi ngày âm dương, ghi nhật ký cá nhân.",
   "lang": "vi",
   "start_url": "/calendar/month",

@@ -1,7 +1,9 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { MAX_YEAR, MIN_YEAR } from '@/app/config/app.config'
+import { ROUTES } from '@/app/config/routes'
 import { CountdownCard } from '@/features/countdown/components/CountdownCard'
 import { formatCountdown } from '@/features/countdown/utils/countdown'
 import { HolidayItem } from '@/features/holidays/components/HolidayItem'
@@ -11,24 +13,25 @@ import { Card } from '@/shared/components/ui/Card'
 import { Segmented } from '@/shared/components/ui/Segmented'
 import { useToday } from '@/shared/hooks/useToday'
 import type { CivilDate } from '@/shared/types'
-import { diffInDays, fromKey, getWeekdayLabel, toKey } from '@/shared/utils/date'
+import { diffInDays, fromKey, getMonthAbbr, getWeekdayLabel, toKey } from '@/shared/utils/date'
 
 type Filter = 'all' | 'public' | 'lunar' | 'international'
 
-const FILTERS = [
-  { value: 'all' as const, label: 'Tất cả' },
-  { value: 'public' as const, label: 'Được nghỉ' },
-  { value: 'lunar' as const, label: 'Âm lịch' },
-  { value: 'international' as const, label: 'Quốc tế' },
-]
-
 export function HolidaysPage() {
+  const { t } = useTranslation()
   const today = useToday()
   const navigate = useNavigate()
   const [year, setYear] = useState(today.year)
   const [filter, setFilter] = useState<Filter>('all')
   const holidays = useHolidaysOfYear(year)
   const [nextHoliday] = useUpcomingHolidays(1)
+
+  const filters = [
+    { value: 'all' as const, label: t('holidays.filters.all') },
+    { value: 'public' as const, label: t('holidays.filters.public') },
+    { value: 'lunar' as const, label: t('holidays.filters.lunar') },
+    { value: 'international' as const, label: t('holidays.filters.international') },
+  ]
 
   const filtered = useMemo(() => {
     return holidays.filter((holiday) => {
@@ -39,18 +42,18 @@ export function HolidaysPage() {
     })
   }, [filter, holidays])
 
-  const goToDate = (date: CivilDate) => navigate(`/calendar/day?date=${toKey(date)}`)
+  const goToDate = (date: CivilDate) => navigate(ROUTES.calendarDay(toKey(date)))
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0">
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h1 className="text-text text-xl font-semibold">Ngày lễ {year}</h1>
+          <h1 className="text-text text-xl font-semibold">{t('holidays.title', { year })}</h1>
           <div className="flex items-center gap-0.5">
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-label="Năm trước"
+              aria-label={t('calendar.previousYear')}
               disabled={year <= MIN_YEAR}
               onClick={() => setYear((y) => y - 1)}
             >
@@ -59,7 +62,7 @@ export function HolidaysPage() {
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-label="Năm sau"
+              aria-label={t('calendar.nextYear')}
               disabled={year >= MAX_YEAR}
               onClick={() => setYear((y) => y + 1)}
             >
@@ -70,7 +73,7 @@ export function HolidaysPage() {
 
         <Segmented
           className="mb-4 flex w-full"
-          options={FILTERS}
+          options={filters}
           value={filter}
           onChange={setFilter}
           size="sm"
@@ -92,7 +95,7 @@ export function HolidaysPage() {
                         <span className="text-text text-lg leading-none font-semibold tabular-nums">
                           {date.day}
                         </span>
-                        <span className="text-subtle text-[10px]">Th {date.month}</span>
+                        <span className="text-subtle text-[10px]">{getMonthAbbr(date.month)}</span>
                       </div>
                     ) : null}
                     <ul className="min-w-0 flex-1 list-none">

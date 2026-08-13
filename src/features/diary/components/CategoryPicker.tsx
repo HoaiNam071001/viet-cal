@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/utils/cn'
 import type { DiaryCategory } from '../types/diary'
 
@@ -11,6 +12,7 @@ interface CategoryPickerProps {
 }
 
 export function CategoryPicker({ categoryId, categories, onChange, onCreate }: CategoryPickerProps) {
+  const { t } = useTranslation()
   const [isAdding, setIsAdding] = useState(false)
   const [name, setName] = useState('')
 
@@ -39,7 +41,7 @@ export function CategoryPicker({ categoryId, categories, onChange, onCreate }: C
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {chip('none', 'Không phân loại', !categoryId, () => onChange(null))}
+      {chip('none', t('diary.uncategorized'), !categoryId, () => onChange(null))}
       {categories.map((category) =>
         chip(
           category.id,
@@ -60,7 +62,7 @@ export function CategoryPicker({ categoryId, categories, onChange, onCreate }: C
               submitNew()
             }
           }}
-          placeholder="Tên danh mục"
+          placeholder={t('diary.categoryNamePlaceholder')}
           className="bg-surface-2 border-border text-text h-8 w-32 rounded-xl border px-2.5 text-xs outline-none"
         />
       ) : (
@@ -70,7 +72,7 @@ export function CategoryPicker({ categoryId, categories, onChange, onCreate }: C
           className="text-primary flex items-center gap-1 rounded-xl px-2 py-1.5 text-xs font-medium"
         >
           <Plus className="size-3.5" />
-          Thêm
+          {t('common.add')}
         </button>
       )}
     </div>

@@ -1,6 +1,8 @@
 import { Repeat, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ROUTES } from '@/app/config/routes'
 import { CalendarHeader } from '@/features/calendar/components/CalendarHeader'
 import { DayDetail } from '@/features/calendar/components/DayDetail'
 import { DayView } from '@/features/calendar/components/DayView'
@@ -19,6 +21,7 @@ import { TodayCard } from '@/widgets/TodayCard'
 import { UpcomingHolidaysCard } from '@/widgets/UpcomingHolidaysCard'
 
 export function CalendarPage() {
+  const { t } = useTranslation()
   const { view, date, today, setDate, setView, goNext, goPrevious, goToToday, isOnToday } =
     useCalendarState()
   const isDesktop = useIsDesktop()
@@ -48,15 +51,15 @@ export function CalendarPage() {
         {/* Mobile only — desktop reaches these from the header nav instead of a tab. */}
         <div className="mt-3 grid grid-cols-2 gap-2 lg:hidden">
           <Button asChild variant="secondary" size="sm" className="gap-1.5">
-            <Link to="/convert">
+            <Link to={ROUTES.convert}>
               <Repeat className="size-4" />
-              Đổi ngày
+              {t('nav.convert')}
             </Link>
           </Button>
           <Button asChild variant="secondary" size="sm" className="gap-1.5">
-            <Link to="/holidays">
+            <Link to={ROUTES.holidays}>
               <Sparkles className="size-4" />
-              Ngày lễ
+              {t('nav.holidays')}
             </Link>
           </Button>
         </div>

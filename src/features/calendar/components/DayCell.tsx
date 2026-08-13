@@ -1,7 +1,9 @@
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Holiday } from '@/features/holidays/types'
 import { formatLunarShort } from '@/features/lunar'
 import { cn } from '@/shared/utils/cn'
+import { getMonthNames } from '@/shared/utils/date'
 import type { CalendarDay } from '../types'
 
 interface DayCellProps {
@@ -25,6 +27,7 @@ export const DayCell = memo(function DayCell({
   showLunar,
   onSelect,
 }: DayCellProps) {
+  const { t } = useTranslation()
   const { date, lunar, isCurrentMonth, isToday, isWeekend } = day
   const isPublicHoliday = holidays.some((holiday) => holiday.isPublicHoliday)
   const hasHoliday = holidays.length > 0
@@ -35,7 +38,12 @@ export const DayCell = memo(function DayCell({
     <button
       type="button"
       onClick={() => onSelect(day)}
-      aria-label={`Ngày ${date.day} tháng ${date.month} năm ${date.year}`}
+      aria-label={t('calendar.dayCellLabel', {
+        day: date.day,
+        month: date.month,
+        year: date.year,
+        monthName: getMonthNames()[date.month - 1],
+      })}
       aria-current={isToday ? 'date' : undefined}
       aria-pressed={isSelected}
       className={cn(

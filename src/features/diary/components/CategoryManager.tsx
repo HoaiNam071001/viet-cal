@@ -1,9 +1,11 @@
 import { Check, Pencil, Plus, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/components/ui/Button'
 import { useDiaryCategories } from '../hooks/useDiaryCategories'
 
 export function CategoryManager() {
+  const { t } = useTranslation()
   const { categories, add, rename, remove } = useDiaryCategories()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draft, setDraft] = useState('')
@@ -31,7 +33,7 @@ export function CategoryManager() {
   return (
     <div className="flex flex-col gap-1.5">
       {categories.length === 0 ? (
-        <p className="text-subtle text-sm">Chưa có danh mục nào.</p>
+        <p className="text-subtle text-sm">{t('diary.noCategories')}</p>
       ) : (
         categories.map((category) => (
           <div key={category.id} className="flex items-center gap-2 py-1">
@@ -44,10 +46,10 @@ export function CategoryManager() {
                   onKeyDown={(event) => event.key === 'Enter' && commitEdit()}
                   className="bg-surface-2 border-border text-text h-9 flex-1 rounded-xl border px-3 text-sm outline-none"
                 />
-                <Button variant="ghost" size="icon-sm" aria-label="Lưu" onClick={commitEdit}>
+                <Button variant="ghost" size="icon-sm" aria-label={t('common.save')} onClick={commitEdit}>
                   <Check className="size-4" />
                 </Button>
-                <Button variant="ghost" size="icon-sm" aria-label="Huỷ" onClick={() => setEditingId(null)}>
+                <Button variant="ghost" size="icon-sm" aria-label={t('common.cancel')} onClick={() => setEditingId(null)}>
                   <X className="size-4" />
                 </Button>
               </>
@@ -60,7 +62,7 @@ export function CategoryManager() {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Sửa ${category.name}`}
+                  aria-label={t('diary.editCategory', { name: category.name })}
                   onClick={() => startEdit(category.id, category.name)}
                 >
                   <Pencil className="size-3.5" />
@@ -68,7 +70,7 @@ export function CategoryManager() {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Xoá ${category.name}`}
+                  aria-label={t('diary.deleteCategory', { name: category.name })}
                   onClick={() => remove(category.id)}
                 >
                   <Trash2 className="size-3.5" />
@@ -87,14 +89,14 @@ export function CategoryManager() {
             onChange={(event) => setNewName(event.target.value)}
             onKeyDown={(event) => event.key === 'Enter' && submitNew()}
             onBlur={submitNew}
-            placeholder="Tên danh mục mới"
+            placeholder={t('diary.newCategoryPlaceholder')}
             className="bg-surface-2 border-border text-text h-9 flex-1 rounded-xl border px-3 text-sm outline-none"
           />
         </div>
       ) : (
         <Button variant="ghost" size="sm" className="text-primary mt-1 justify-start gap-1.5" onClick={() => setIsAdding(true)}>
           <Plus className="size-4" />
-          Thêm danh mục
+          {t('diary.addCategory')}
         </Button>
       )}
     </div>

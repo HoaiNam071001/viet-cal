@@ -48,7 +48,7 @@ describe('app smoke test', () => {
   it('renders the home page with today and the feature list', () => {
     renderApp('/')
 
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('Nhật Ký Lịch')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('Diary Calendar')
     expect(screen.getByText('Hôm nay')).toBeTruthy()
     expect(screen.getByText('Âm lịch chuẩn Việt Nam')).toBeTruthy()
     expect(screen.getByText('Mở lịch tháng')).toBeTruthy()

@@ -1,7 +1,9 @@
 import { LogOut, Settings } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/app/providers/AuthProvider'
+import { ROUTES } from '@/app/config/routes'
 import { signOut } from '@/features/auth/services/auth.service'
 import { Button } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/cn'
@@ -9,6 +11,7 @@ import { cn } from '@/shared/utils/cn'
 /** Account entry point for the desktop header: sign-in CTA when logged out, an
  * avatar button with a dropdown (Settings, sign out) once signed in. */
 export function UserMenu() {
+  const { t } = useTranslation()
   const { user, isLoading } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -35,13 +38,13 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <Button variant="primary" size="sm" onClick={() => navigate('/auth/login')}>
-        Đăng nhập
+      <Button variant="primary" size="sm" onClick={() => navigate(ROUTES.authLogin)}>
+        {t('auth.signIn')}
       </Button>
     )
   }
 
-  const displayName = (user.user_metadata?.display_name as string | undefined) ?? user.email ?? 'Tài khoản'
+  const displayName = (user.user_metadata?.display_name as string | undefined) ?? user.email ?? t('account.title')
   const initial = displayName.charAt(0).toUpperCase()
 
   const onSignOut = async () => {
@@ -49,7 +52,7 @@ export function UserMenu() {
     try {
       await signOut()
       setOpen(false)
-      navigate('/')
+      navigate(ROUTES.home)
     } finally {
       setIsSigningOut(false)
     }
@@ -62,7 +65,7 @@ export function UserMenu() {
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Tài khoản"
+        aria-label={t('account.title')}
         className="bg-primary-soft text-primary grid size-9 place-items-center rounded-full text-sm font-semibold"
       >
         {initial}
@@ -83,12 +86,12 @@ export function UserMenu() {
             role="menuitem"
             onClick={() => {
               setOpen(false)
-              navigate('/settings')
+              navigate(ROUTES.settings)
             }}
             className="text-text hover:bg-surface-2 flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm"
           >
             <Settings className="size-4" />
-            Cài đặt
+            {t('common.settings')}
           </button>
           <button
             type="button"
@@ -101,7 +104,7 @@ export function UserMenu() {
             )}
           >
             <LogOut className="size-4" />
-            {isSigningOut ? 'Đang đăng xuất…' : 'Đăng xuất'}
+            {isSigningOut ? t('auth.signingOut') : t('auth.signOut')}
           </button>
         </div>
       ) : null}

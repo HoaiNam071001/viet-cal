@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { ROUTES } from '@/app/config/routes'
 import { signUpWithPassword } from '@/features/auth/services/auth.service'
 import { toAuthErrorMessage } from '@/features/auth/types/auth'
 import { Button } from '@/shared/components/ui/Button'
@@ -7,6 +9,7 @@ import { AuthTextField } from './AuthTextField'
 import { GoogleSignInButton } from './GoogleSignInButton'
 
 export function SignupForm() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const [displayName, setDisplayName] = useState('')
@@ -22,11 +25,11 @@ export function SignupForm() {
     setError(null)
 
     if (password.length < 6) {
-      setError('Mật khẩu cần tối thiểu 6 ký tự.')
+      setError(t('auth.passwordMinLength'))
       return
     }
     if (password !== confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp.')
+      setError(t('auth.passwordMismatch'))
       return
     }
 
@@ -40,7 +43,7 @@ export function SignupForm() {
         setAwaitingConfirmation(true)
       }
     } catch (err) {
-      setError(toAuthErrorMessage(err))
+      setError(toAuthErrorMessage(err, t))
     } finally {
       setIsSubmitting(false)
     }
@@ -49,8 +52,7 @@ export function SignupForm() {
   if (awaitingConfirmation) {
     return (
       <p className="text-text text-sm">
-        Đã gửi email xác nhận đến <strong>{email}</strong>. Vui lòng kiểm tra hộp thư và bấm vào liên
-        kết để hoàn tất đăng ký.
+        {t('auth.confirmationSentBefore')} <strong>{email}</strong>. {t('auth.confirmationSentAfter')}
       </p>
     )
   }
@@ -61,13 +63,13 @@ export function SignupForm() {
 
       <div className="flex items-center gap-3">
         <span className="bg-border h-px flex-1" />
-        <span className="text-subtle text-xs">hoặc</span>
+        <span className="text-subtle text-xs">{t('auth.or')}</span>
         <span className="bg-border h-px flex-1" />
       </div>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <AuthTextField
-          label="Tên hiển thị"
+          label={t('auth.displayName')}
           name="displayName"
           autoComplete="name"
           required
@@ -75,7 +77,7 @@ export function SignupForm() {
           onChange={(event) => setDisplayName(event.target.value)}
         />
         <AuthTextField
-          label="Email"
+          label={t('auth.email')}
           name="email"
           type="email"
           autoComplete="email"
@@ -84,7 +86,7 @@ export function SignupForm() {
           onChange={(event) => setEmail(event.target.value)}
         />
         <AuthTextField
-          label="Mật khẩu"
+          label={t('auth.password')}
           name="password"
           type="password"
           autoComplete="new-password"
@@ -93,7 +95,7 @@ export function SignupForm() {
           onChange={(event) => setPassword(event.target.value)}
         />
         <AuthTextField
-          label="Xác nhận mật khẩu"
+          label={t('auth.confirmPassword')}
           name="confirmPassword"
           type="password"
           autoComplete="new-password"
@@ -105,13 +107,13 @@ export function SignupForm() {
         {error ? <p className="text-primary text-sm">{error}</p> : null}
 
         <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="mt-1">
-          {isSubmitting ? 'Đang tạo tài khoản…' : 'Tạo tài khoản'}
+          {isSubmitting ? t('auth.signingUp') : t('auth.signUp')}
         </Button>
 
         <p className="text-muted text-center text-sm">
-          Đã có tài khoản?{' '}
-          <Link to="/auth/login" className="text-primary font-medium">
-            Đăng nhập
+          {t('auth.haveAccount')}{' '}
+          <Link to={ROUTES.authLogin} className="text-primary font-medium">
+            {t('auth.signIn')}
           </Link>
         </p>
       </form>

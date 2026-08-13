@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { updatePassword } from '@/features/auth/services/auth.service'
 import { toAuthErrorMessage } from '@/features/auth/types/auth'
 import { Button } from '@/shared/components/ui/Button'
@@ -11,6 +12,7 @@ interface ChangePasswordSheetProps {
 }
 
 export function ChangePasswordSheet({ open, onClose }: ChangePasswordSheetProps) {
+  const { t } = useTranslation()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +31,7 @@ export function ChangePasswordSheet({ open, onClose }: ChangePasswordSheetProps)
     event.preventDefault()
     setError(null)
     if (password !== confirmPassword) {
-      setError('Mật khẩu nhập lại không khớp.')
+      setError(t('auth.passwordMismatch'))
       return
     }
     setIsSubmitting(true)
@@ -37,25 +39,25 @@ export function ChangePasswordSheet({ open, onClose }: ChangePasswordSheetProps)
       await updatePassword(password)
       setSuccess(true)
     } catch (err) {
-      setError(toAuthErrorMessage(err))
+      setError(toAuthErrorMessage(err, t))
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <Sheet open={open} onClose={close} title="Đổi mật khẩu" desktopVariant="dialog">
+    <Sheet open={open} onClose={close} title={t('auth.changePassword')} desktopVariant="dialog">
       {success ? (
         <div className="flex flex-col items-center gap-4 py-4 text-center">
-          <p className="text-text text-sm font-medium">Đã đổi mật khẩu thành công.</p>
+          <p className="text-text text-sm font-medium">{t('auth.changePasswordSuccess')}</p>
           <Button variant="primary" size="lg" onClick={close} className="w-full">
-            Đóng
+            {t('common.close')}
           </Button>
         </div>
       ) : (
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <AuthTextField
-            label="Mật khẩu mới"
+            label={t('auth.newPassword')}
             name="new-password"
             type="password"
             autoComplete="new-password"
@@ -65,7 +67,7 @@ export function ChangePasswordSheet({ open, onClose }: ChangePasswordSheetProps)
             onChange={(event) => setPassword(event.target.value)}
           />
           <AuthTextField
-            label="Nhập lại mật khẩu mới"
+            label={t('auth.confirmNewPassword')}
             name="confirm-password"
             type="password"
             autoComplete="new-password"
@@ -78,7 +80,7 @@ export function ChangePasswordSheet({ open, onClose }: ChangePasswordSheetProps)
           {error ? <p className="text-primary text-sm">{error}</p> : null}
 
           <Button type="submit" variant="primary" size="lg" disabled={isSubmitting}>
-            {isSubmitting ? 'Đang lưu…' : 'Đổi mật khẩu'}
+            {isSubmitting ? t('common.saving') : t('auth.changePassword')}
           </Button>
         </form>
       )}

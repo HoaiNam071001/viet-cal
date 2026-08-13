@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowRight, Check, Copy } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/components/ui/Button'
 import { Card } from '@/shared/components/ui/Card'
 import { Segmented } from '@/shared/components/ui/Segmented'
@@ -7,20 +8,21 @@ import type { CivilDate } from '@/shared/types'
 import { cn } from '@/shared/utils/cn'
 import { useDateConverter } from '../hooks/useDateConverter'
 
-const DIRECTIONS = [
-  { value: 'solar-to-lunar' as const, label: 'Dương → Âm' },
-  { value: 'lunar-to-solar' as const, label: 'Âm → Dương' },
-]
-
 interface DateConverterProps {
   onViewDate?: (date: CivilDate) => void
   className?: string
 }
 
 export function DateConverter({ onViewDate, className }: DateConverterProps) {
+  const { t } = useTranslation()
   const { direction, setDirection, input, setInput, isLeapMonth, setIsLeapMonth, canBeLeap, result, today } =
     useDateConverter()
   const [copied, setCopied] = useState(false)
+
+  const directions = [
+    { value: 'solar-to-lunar' as const, label: t('converter.solarToLunar') },
+    { value: 'lunar-to-solar' as const, label: t('converter.lunarToSolar') },
+  ]
 
   const copy = async () => {
     try {
@@ -32,12 +34,12 @@ export function DateConverter({ onViewDate, className }: DateConverterProps) {
     }
   }
 
-  const sourceLabel = direction === 'solar-to-lunar' ? 'Dương lịch' : 'Âm lịch'
-  const targetLabel = direction === 'solar-to-lunar' ? 'Âm lịch' : 'Dương lịch'
+  const sourceLabel = direction === 'solar-to-lunar' ? t('converter.solarCalendar') : t('converter.lunarCalendar')
+  const targetLabel = direction === 'solar-to-lunar' ? t('converter.lunarCalendar') : t('converter.solarCalendar')
 
   return (
     <div className={cn('flex flex-col gap-4', className)}>
-      <Segmented options={DIRECTIONS} value={direction} onChange={setDirection} className="flex w-full" />
+      <Segmented options={directions} value={direction} onChange={setDirection} className="flex w-full" />
 
       <Card variant="glass" className="p-5">
         <p className="text-subtle mb-3 text-[11px] font-semibold tracking-[0.14em] uppercase">
@@ -46,21 +48,21 @@ export function DateConverter({ onViewDate, className }: DateConverterProps) {
 
         <div className="grid grid-cols-3 gap-2">
           <NumberField
-            label="Ngày"
+            label={t('converter.day')}
             value={input.day}
             min={1}
             max={31}
             onChange={(day) => setInput({ ...input, day })}
           />
           <NumberField
-            label="Tháng"
+            label={t('converter.month')}
             value={input.month}
             min={1}
             max={12}
             onChange={(month) => setInput({ ...input, month })}
           />
           <NumberField
-            label="Năm"
+            label={t('converter.year')}
             value={input.year}
             min={1900}
             max={2100}
@@ -82,14 +84,14 @@ export function DateConverter({ onViewDate, className }: DateConverterProps) {
               checked={isLeapMonth}
               onChange={(event) => setIsLeapMonth(event.target.checked)}
             />
-            Tháng nhuận
-            {!canBeLeap ? <span className="text-subtle text-xs">(năm này không có)</span> : null}
+            {t('converter.leapMonth')}
+            {!canBeLeap ? <span className="text-subtle text-xs">{t('converter.leapMonthUnavailable')}</span> : null}
           </label>
         ) : null}
 
         <div className="mt-3 flex flex-wrap gap-2">
           <Button variant="ghost" size="sm" onClick={() => setInput(today)}>
-            Hôm nay
+            {t('common.today')}
           </Button>
         </div>
       </Card>
@@ -116,11 +118,11 @@ export function DateConverter({ onViewDate, className }: DateConverterProps) {
             <div className="mt-4 flex flex-wrap gap-2">
               <Button variant="secondary" size="sm" onClick={copy}>
                 {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-                {copied ? 'Đã sao chép' : 'Sao chép'}
+                {copied ? t('converter.copied') : t('converter.copy')}
               </Button>
               {onViewDate && result.solar ? (
                 <Button variant="primary" size="sm" onClick={() => onViewDate(result.solar!)}>
-                  Xem ngày này
+                  {t('converter.viewThisDate')}
                 </Button>
               ) : null}
             </div>

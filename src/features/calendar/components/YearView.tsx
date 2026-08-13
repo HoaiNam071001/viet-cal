@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHolidayContext } from '@/app/providers/HolidayProvider'
 import { getYearCanChi, solarToLunar } from '@/features/lunar'
 import { Card } from '@/shared/components/ui/Card'
@@ -17,6 +18,7 @@ interface YearViewProps {
 const MONTHS = Array.from({ length: 12 }, (_, index) => index + 1)
 
 export function YearView({ date, today, selected, onSelectDate, onSelectMonth }: YearViewProps) {
+  const { t } = useTranslation()
   const { ensureYear } = useHolidayContext()
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export function YearView({ date, today, selected, onSelectDate, onSelectMonth }:
   return (
     <div>
       <div className="mb-4 flex items-baseline gap-2 px-1">
-        <span className="text-subtle text-sm">Năm Âm lịch</span>
+        <span className="text-subtle text-sm">{t('calendar.lunarYearLabel')}</span>
         <span className="text-accent text-sm font-semibold">
           {getYearCanChi(solarToLunar(civil(date.year, 6, 15)).year).name}
         </span>

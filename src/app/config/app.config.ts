@@ -1,4 +1,4 @@
-export const APP_NAME = 'Nhật Ký Lịch'
+export const APP_NAME = 'Diary Calendar'
 export const APP_TAGLINE = 'Lịch Việt + Nhật ký • Sống trọn vẹn mỗi ngày'
 export const APP_DESCRIPTION = 'Lịch Dương – Lịch Âm Việt Nam, ngày lễ, can chi, tiết khí, nhật ký cá nhân'
 
@@ -11,7 +11,13 @@ export const STORAGE_KEYS = {
   settings: 'vietcal:settings',
   holidays: 'vietcal:holidays:v1',
   diaryEntries: 'vietcal:diary:v1',
+  diaryListView: 'vietcal:diary:list-view',
+  language: 'vietcal:language',
 } as const
+
+export const SUPPORTED_LANGUAGES = ['vi', 'en'] as const
+export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number]
+export const DEFAULT_LANGUAGE: AppLanguage = 'vi'
 
 /** Years the app is willing to navigate to. The lunar algorithm is reliable well beyond this. */
 export const MIN_YEAR = 1900

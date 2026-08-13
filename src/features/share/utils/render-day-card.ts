@@ -1,3 +1,4 @@
+import i18n from '@/app/i18n'
 import { APP_NAME } from '@/app/config/app.config'
 import { formatLunarTraditional, getLunarDayInfo } from '@/features/lunar'
 import type { CivilDate } from '@/shared/types'
@@ -68,8 +69,8 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
 
   ctx.fillStyle = '#63736a'
   ctx.font = font(38)
-  ctx.fillText(`Năm ${info.sexagenary.year.name}`, centerX, 900)
-  ctx.fillText(`Ngày ${info.sexagenary.day.name} · ${info.solarTerm.name}`, centerX, 960)
+  ctx.fillText(i18n.t('converter.yearOf', { name: info.sexagenary.year.name }), centerX, 900)
+  ctx.fillText(`${i18n.t('calendar.canChiLabels.day')} ${info.sexagenary.day.name} · ${info.solarTerm.name}`, centerX, 960)
 
   if (holidayName) {
     const chipWidth = Math.min(WIDTH - pad * 2 - 120, ctx.measureText(holidayName).width + 200)
@@ -83,7 +84,7 @@ export async function renderDayCard(date: CivilDate, holidayName?: string): Prom
 
   ctx.fillStyle = '#9aa8a0'
   ctx.font = font(30)
-  ctx.fillText(`${APP_NAME} · Dương lịch & Âm lịch`, centerX, HEIGHT - 130)
+  ctx.fillText(`${APP_NAME} · ${i18n.t('share.tagline')}`, centerX, HEIGHT - 130)
 
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
 }

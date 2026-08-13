@@ -1,4 +1,5 @@
 import { CalendarDays } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useUpcomingHolidays, type UpcomingHoliday } from '@/features/holidays/hooks/useHolidays'
 import { formatCountdown } from '@/features/countdown/utils/countdown'
 import { Card, CardHeader } from '@/shared/components/ui/Card'
@@ -13,17 +14,18 @@ interface UpcomingHolidaysCardProps {
 }
 
 export function UpcomingHolidaysCard({ count = 5, onSelect, className }: UpcomingHolidaysCardProps) {
+  const { t } = useTranslation()
   const upcoming = useUpcomingHolidays(count)
 
   return (
     <Card variant="glass" className={cn('overflow-hidden', className)}>
-      <CardHeader title="Ngày lễ sắp tới" icon={<CalendarDays className="size-3.5" />} />
+      <CardHeader title={t('widgets.upcomingHolidays')} icon={<CalendarDays className="size-3.5" />} />
       <ul className="flex flex-col px-2 pb-2">
         {upcoming.map((item) => (
           <UpcomingRow key={item.holiday.id} item={item} onSelect={onSelect} />
         ))}
         {upcoming.length === 0 ? (
-          <li className="text-subtle px-3 py-4 text-sm">Đang tải ngày lễ…</li>
+          <li className="text-subtle px-3 py-4 text-sm">{t('widgets.loadingHolidays')}</li>
         ) : null}
       </ul>
     </Card>
@@ -37,6 +39,7 @@ function UpcomingRow({
   item: UpcomingHoliday
   onSelect?: (date: CivilDate) => void
 }) {
+  const { t } = useTranslation()
   const { holiday, date, daysUntil } = item
   return (
     <li>
@@ -52,7 +55,7 @@ function UpcomingRow({
           <p className="text-text truncate text-sm font-medium">{holiday.name}</p>
           <p className="text-subtle text-xs tabular-nums">
             {formatNumericVN(date)}
-            {holiday.lunar ? ` · ${holiday.lunar.day}/${holiday.lunar.month} ÂL` : ''}
+            {holiday.lunar ? ` · ${holiday.lunar.day}/${holiday.lunar.month} ${t('converter.lunarAbbr')}` : ''}
           </p>
         </div>
         <span

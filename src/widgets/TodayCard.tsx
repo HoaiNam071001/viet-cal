@@ -1,4 +1,5 @@
 import { Sun } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useHolidaysOfDate } from '@/features/holidays/hooks/useHolidays'
 import { formatLunarTraditional, useLunarDate } from '@/features/lunar'
 import { Badge } from '@/shared/components/ui/Badge'
@@ -16,6 +17,7 @@ interface TodayCardProps {
 }
 
 export function TodayCard({ onOpen, compact = false, className }: TodayCardProps) {
+  const { t } = useTranslation()
   const today = useToday()
   const info = useLunarDate(today)
   const holidays = useHolidaysOfDate(today)
@@ -29,8 +31,8 @@ export function TodayCard({ onOpen, compact = false, className }: TodayCardProps
       </div>
       <p className="text-accent mt-3 text-[15px] font-medium">{formatLunarTraditional(info.lunar)}</p>
       <p className="text-subtle text-xs">
-        Ngày {info.sexagenary.day.name} · Tháng {info.sexagenary.month.name} · Năm{' '}
-        {info.sexagenary.year.name}
+        {t('calendar.canChiLabels.day')} {info.sexagenary.day.name} · {t('calendar.canChiLabels.month')}{' '}
+        {info.sexagenary.month.name} · {t('calendar.canChiLabels.year')} {info.sexagenary.year.name}
       </p>
 
       <div className="mt-3 flex flex-wrap gap-1.5">
@@ -40,7 +42,7 @@ export function TodayCard({ onOpen, compact = false, className }: TodayCardProps
             {holiday.name}
           </Badge>
         ))}
-        {holidays.length === 0 ? <Badge tone="outline">Không có sự kiện</Badge> : null}
+        {holidays.length === 0 ? <Badge tone="outline">{t('widgets.noEvents')}</Badge> : null}
       </div>
     </>
   )
@@ -59,7 +61,7 @@ export function TodayCard({ onOpen, compact = false, className }: TodayCardProps
 
   return (
     <Card variant="glass" className={cn('overflow-hidden', className)}>
-      <CardHeader title="Hôm nay" icon={<Sun className="size-3.5" />} />
+      <CardHeader title={t('common.today')} icon={<Sun className="size-3.5" />} />
       <div
         className={cn('px-5 pt-1 pb-5', onOpen && 'cursor-pointer')}
         onClick={onOpen ? () => onOpen(today) : undefined}
