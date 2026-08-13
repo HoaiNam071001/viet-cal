@@ -13,6 +13,7 @@ import type { DiaryEntry, DiaryEntryInput } from '../types/diary'
 import { CategoryPicker } from './CategoryPicker'
 import { MoodPicker } from './MoodPicker'
 import { TagInput } from './TagInput'
+import { TitleAutocomplete } from './TitleAutocomplete'
 
 interface DiaryEditorProps {
   date: CivilDate
@@ -104,12 +105,7 @@ export function DiaryEditor({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <input
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder={t('diary.titlePlaceholder')}
-          className="bg-surface-2 border-border text-text focus:border-primary h-12 w-full rounded-2xl border px-3.5 text-base font-medium outline-none transition-colors"
-        />
+        <TitleAutocomplete value={title} onChange={setTitle} placeholder={t('diary.titlePlaceholder')} />
         {!entry && titleSuggestions?.length ? (
           <div className="mt-2 flex flex-wrap gap-1.5">
             {titleSuggestions.map((suggestion) => (
