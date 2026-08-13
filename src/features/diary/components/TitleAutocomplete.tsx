@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { DIARY_TITLE_SUGGESTIONS } from '../constants/title-suggestions'
+import { DIARY_TITLE_DEFAULT_SUGGESTIONS, DIARY_TITLE_SUGGESTIONS } from '../constants/title-suggestions'
 
 interface TitleAutocompleteProps {
   value: string
@@ -10,7 +10,8 @@ interface TitleAutocompleteProps {
 const MAX_MATCHES = 8
 
 /** Free-text title input with a click-to-fill autocomplete dropdown. Matches Vietnamese and
- * English suggestions alike, case-insensitively, regardless of the app's current UI language. */
+ * English suggestions alike, case-insensitively, regardless of the app's current UI language.
+ * Focusing an empty input shows a curated sample before the user types anything. */
 export function TitleAutocomplete({ value, onChange, placeholder }: TitleAutocompleteProps) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -18,7 +19,7 @@ export function TitleAutocomplete({ value, onChange, placeholder }: TitleAutocom
   const query = value.trim().toLowerCase()
   const matches = query
     ? DIARY_TITLE_SUGGESTIONS.filter((suggestion) => suggestion.toLowerCase().includes(query)).slice(0, MAX_MATCHES)
-    : []
+    : DIARY_TITLE_DEFAULT_SUGGESTIONS
 
   useEffect(() => {
     if (!open) return

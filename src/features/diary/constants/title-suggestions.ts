@@ -785,3 +785,28 @@ const DIARY_TITLE_SUGGESTIONS_EN: string[] = [
 
 /** Combined pool used for the title autocomplete — both languages match regardless of UI locale. */
 export const DIARY_TITLE_SUGGESTIONS: string[] = [...DIARY_TITLE_SUGGESTIONS_VI, ...DIARY_TITLE_SUGGESTIONS_EN]
+
+/** Shown when the title input is focused but still empty — a curated, language-mixed sample
+ * spanning several categories, rather than the alphabetical/list-order head of the full pool. */
+export const DIARY_TITLE_DEFAULT_SUGGESTIONS: string[] = [
+  'Một ngày bình thường',
+  'A normal day',
+  'Hôm nay tôi muốn...',
+  'Today I want...',
+  'Cảm xúc của tôi',
+  'My feelings',
+  'Công việc hôm nay',
+  'Work today',
+  'Một ngày với bạn bè',
+  'A day with friends',
+  'Nhật ký du lịch',
+  'Travel journal',
+  'Tôi biết ơn hôm nay',
+  'Grateful today',
+  'Buổi tập hôm nay',
+  "Today's workout",
+  'Kỷ niệm hôm nay',
+  "Today's memory",
+  'Mục tiêu hôm nay',
+  "Today's goal",
+]
